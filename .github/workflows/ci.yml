@@ -1,0 +1,72 @@
+name: CI
+on:
+  push:
+  pull_request:
+
+jobs:
+  # Static scanner: build (strict type check), tests, the compiled command, and an install from the packed tarball.
+  testid-scan:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node: [18, 20, 22, 24]
+    defaults:
+      run:
+        working-directory: packages/testid-scan
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+      - run: npm ci
+      - run: npm run build
+      - run: npm test
+      - run: node dist/cli.js --version
+      - run: node scripts/smoke.mjs
+
+  # Page scanner and verifier: the same, in a real Chromium.
+  testid-scan-page:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node: [18, 20, 22]
+    defaults:
+      run:
+        working-directory: packages/testid-scan-page
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm run build
+      - run: npm test
+      - name: CLI smoke test
+        run: |
+          node dist/cli.js --version
+          node dist/cli.js "file://$PWD/test/fixtures/orders.html" --out "$RUNNER_TEMP/report.md" --format quiet
+      - run: node scripts/smoke.mjs
+
+  # Accuracy regression of both tools together: the corpora against accuracy/baseline.json and accuracy/targets.json,
+  # and the check that instrumented builds look the same as plain ones.
+  accuracy:
+    needs: [testid-scan, testid-scan-page]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci && npm run build
+        working-directory: packages/testid-scan
+      - run: npm ci && npm run build && npx playwright install --with-deps chromium
+        working-directory: packages/testid-scan-page
+      - run: for d in accuracy/*-shop; do (cd "$d" && npm ci); done
+        working-directory: packages/testid-scan-page
+      - run: npm run accuracy
+        working-directory: packages/testid-scan-page
+      - run: npm run equivalence
+        working-directory: packages/testid-scan-page

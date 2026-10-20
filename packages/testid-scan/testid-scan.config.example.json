@@ -1,0 +1,28 @@
+{
+  "framework": "auto",
+  "testIdAttribute": "data-testid",
+  "prefixes": ["orders", "admin", "shared"],
+  "i18nFile": "src/assets/i18n/en.json",
+  "iconTags": ["mat-icon", "svg", "v-icon", "el-icon", "q-icon", "font-awesome-icon", "app-icon"],
+  "ignoreDirs": ["node_modules", "dist", "build", ".angular", ".next", ".git", "coverage", "__tests__", "__mocks__", "storybook-static"],
+
+  "elements": {
+    "p-dropdown": "select",
+    "p-checkbox": "checkbox",
+    "app-icon-button": "button"
+  },
+  "attributes": {
+    "pButton": "button"
+  },
+  "translatePipes": ["translate"],
+
+  "components": {
+    "PrimaryButton": "button",
+    "FormInput": { "kind": "input", "nameProps": ["label"] },
+    "DataGridRow": "row",
+    "app-button": "button"
+  },
+  "translateFunctions": ["t", "$t"],
+  "iconNamePattern": "Icon$",
+  "reactExtensions": [".tsx", ".jsx"]
+}

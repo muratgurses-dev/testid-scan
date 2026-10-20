@@ -1,0 +1,45 @@
+{
+  "framework": "react",
+  "source": "src",
+  "routes": [
+    "#/",
+    "#/cart"
+  ],
+  "variants": [
+    {
+      "name": "",
+      "build": [
+        "npx",
+        "vite",
+        "build"
+      ],
+      "dist": "dist"
+    },
+    {
+      "name": "data-tsrc",
+      "build": [
+        "npx",
+        "vite",
+        "build",
+        "--outDir",
+        "dist-tsrc"
+      ],
+      "env": {
+        "TESTID_SOURCE": "1"
+      },
+      "dist": "dist-tsrc"
+    },
+    {
+      "name": "source maps",
+      "build": [
+        "npx",
+        "vite",
+        "build",
+        "--sourcemap",
+        "--outDir",
+        "dist-maps"
+      ],
+      "dist": "dist-maps"
+    }
+  ]
+}

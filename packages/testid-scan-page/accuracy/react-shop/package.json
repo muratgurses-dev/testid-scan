@@ -1,0 +1,8 @@
+{
+  "name": "accuracy-react-shop",
+  "private": true,
+  "type": "module",
+  "description": "Ground-truth app for the accuracy run. Every interactive element carries data-gt, a hand-written id the scanners ignore.",
+  "dependencies": { "react": "18.3.1", "react-dom": "18.3.1" },
+  "devDependencies": { "vite": "5.4.11", "@vitejs/plugin-react": "4.3.4" }
+}

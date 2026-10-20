@@ -1,0 +1,67 @@
+{
+  "name": "testid-scan-page",
+  "version": "0.9.0",
+  "description": "Opens a web page in a real browser and reports, element by element, whether a Playwright test can find it by role and accessible name, by test ID, or not at all. Can also verify the locators recommended by testid-scan.",
+  "keywords": [
+    "playwright",
+    "testing",
+    "data-testid",
+    "accessibility",
+    "locators",
+    "e2e"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/muratgurses-dev/testid-scan.git",
+    "directory": "packages/testid-scan-page"
+  },
+  "homepage": "https://github.com/muratgurses-dev/testid-scan/tree/main/packages/testid-scan-page#readme",
+  "bugs": {
+    "url": "https://github.com/muratgurses-dev/testid-scan/issues"
+  },
+  "type": "module",
+  "bin": {
+    "testid-scan-page": "dist/cli.js"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./vite": {
+      "types": "./dist/vite.d.ts",
+      "default": "./dist/vite.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "tsc -p tsconfig.test.json && node scripts/run-tests.mjs",
+    "accuracy": "node accuracy/run.mjs",
+    "prepublishOnly": "npm run build && npm test",
+    "equivalence": "node accuracy/equivalence.mjs",
+    "smoke": "node scripts/smoke.mjs"
+  },
+  "peerDependencies": {
+    "playwright": ">=1.51.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "playwright": "1.56.0",
+    "typescript": "^5.9.3",
+    "vue": "^3.5.13"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

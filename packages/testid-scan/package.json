@@ -1,0 +1,65 @@
+{
+  "name": "testid-scan",
+  "version": "1.0.0",
+  "description": "Static scanner for Angular templates, React components and Vue single-file components: shows which elements a UI test can find by role and accessible name, and which ones need a test ID.",
+  "keywords": [
+    "angular",
+    "react",
+    "vue",
+    "jsx",
+    "playwright",
+    "cypress",
+    "testing",
+    "data-testid",
+    "accessibility",
+    "locators",
+    "e2e"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/muratgurses-dev/testid-scan.git",
+    "directory": "packages/testid-scan"
+  },
+  "homepage": "https://github.com/muratgurses-dev/testid-scan/tree/main/packages/testid-scan#readme",
+  "bugs": {
+    "url": "https://github.com/muratgurses-dev/testid-scan/issues"
+  },
+  "type": "module",
+  "bin": {
+    "testid-scan": "dist/cli.js"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    "testid-scan.config.example.json"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "tsc -p tsconfig.test.json && node scripts/run-tests.mjs",
+    "test:src": "node --test test/*.test.ts",
+    "prepublishOnly": "npm run build && npm test",
+    "smoke": "node scripts/smoke.mjs"
+  },
+  "dependencies": {
+    "typescript": "^5.9.3"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

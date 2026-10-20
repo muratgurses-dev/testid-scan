@@ -1,0 +1,10 @@
+node_modules
+dist
+.test-build
+*.tgz
+testid-page.md
+accuracy/results
+accuracy/real/results
+.angular
+dist-dev
+dist-tsrc

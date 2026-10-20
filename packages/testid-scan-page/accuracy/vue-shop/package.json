@@ -1,0 +1,8 @@
+{
+  "name": "accuracy-vue-shop",
+  "private": true,
+  "type": "module",
+  "description": "Ground-truth app for the accuracy run. Every interactive element carries data-gt, a hand-written id the scanners ignore.",
+  "dependencies": { "vue": "3.5.13" },
+  "devDependencies": { "vite": "5.4.11", "@vitejs/plugin-vue": "5.2.1" }
+}

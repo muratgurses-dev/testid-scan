@@ -1,0 +1,11 @@
+export { scanPages, settle } from './scan.ts';
+export type { ScanPagesOptions } from './scan.ts';
+export { scanLoadedPage, parseSnapshot } from './page.ts';
+export { parseLocator, buildLocator, checkOnPage, locatorsToCheck, finishVerify, summarize } from './verify.ts';
+export type { CheckOptions, SelectorsByFile, StaticScan } from './verify.ts';
+export { reactOwnership, judgeChain, decodeMappings, sourceAt, linkOf } from './react.ts';
+export type { ChainLink, ReactOwnership, SourceMap } from './react.ts';
+export { testidSource, markJsx, markVue } from './vite.ts';
+export type { SourcePluginOptions } from './vite.ts';
+export { renderMarkdown, renderText, summaryLine } from './report.ts';
+export type { Counts, PageElement, PageFinding, PageResult, ScanPageResult, Status, Evidence, LocatorOnPage, TargetCheck, Verdict, VerifiedLocator, VerifyOutcome, VerifyResult, VerifySummary } from './types.ts';

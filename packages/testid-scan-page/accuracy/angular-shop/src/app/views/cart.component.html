@@ -1,0 +1,14 @@
+<section>
+  <h1>Cart</h1>
+  <ul>
+    @for (item of items; track item.id) {
+      <li>
+        <span>{{ item.name }}</span>
+        <button data-gt="cart-remove" (click)="remove(item)">Remove</button>
+      </li>
+    }
+  </ul>
+  <label>Gift note <textarea data-gt="cart-note"></textarea></label>
+  <button data-gt="cart-checkout" (click)="0">Checkout</button>
+  <a href="#/" data-gt="cart-continue">Continue shopping</a>
+</section>

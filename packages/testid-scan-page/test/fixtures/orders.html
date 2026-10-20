@@ -1,0 +1,24 @@
+<!doctype html>
+<html><head><title>Orders</title><style>.card{cursor:pointer}</style></head>
+<body>
+<nav><a href="/">Home</a> <a href="/orders">Orders</a></nav>
+<h1>Orders</h1>
+<button id="add">Add order</button>
+<button aria-label="Refresh"><svg width="10" height="10"></svg></button>
+<button><svg width="10" height="10"></svg></button>
+<label>Search <input type="search"></label>
+<input placeholder="Filter">
+<table>
+  <tr><th>Name</th><th></th></tr>
+  <tr><td>Alpha</td><td><button>Edit</button> <a href="/o/1" data-testid="orders-open-link">Open</a></td></tr>
+  <tr><td>Beta</td><td><button>Edit</button> <a href="/o/2" data-testid="orders-open-link">Open</a></td></tr>
+</table>
+<div class="card" onclick="void 0">Select plan</div>
+<div class="card">Hover me</div>
+<span tabindex="0">Focusable</span>
+<footer><a href="/">Home</a></footer>
+<div hidden><button>Hidden</button></div>
+<button data-testid="save-btn">Save</button>
+<button data-testid="cancel-btn" disabled>Save</button>
+<div aria-hidden="true"><button>Ghost</button></div>
+</body></html>

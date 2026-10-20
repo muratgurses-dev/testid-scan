@@ -1,0 +1,5 @@
+{
+  "_note": "Written on 2026-10-14 before the three-way verdict was first measured, so the bar is not moved to fit the result. The run fails when any corpus, or the total, is below these.",
+  "verifiedCorrectPrecision": 99,
+  "verifiedIncorrectPrecision": 95
+}

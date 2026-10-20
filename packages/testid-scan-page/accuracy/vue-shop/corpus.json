@@ -1,0 +1,49 @@
+{
+  "framework": "vue",
+  "source": "src",
+  "routes": [
+    "#/",
+    "#/cart"
+  ],
+  "variants": [
+    {
+      "name": "",
+      "build": [
+        "npx",
+        "vite",
+        "build"
+      ],
+      "dist": "dist"
+    },
+    {
+      "name": "dev",
+      "build": [
+        "npx",
+        "vite",
+        "build",
+        "--mode",
+        "development",
+        "--outDir",
+        "dist-dev"
+      ],
+      "env": {
+        "NODE_ENV": "development"
+      },
+      "dist": "dist-dev"
+    },
+    {
+      "name": "data-tsrc",
+      "build": [
+        "npx",
+        "vite",
+        "build",
+        "--outDir",
+        "dist-tsrc"
+      ],
+      "env": {
+        "TESTID_SOURCE": "1"
+      },
+      "dist": "dist-tsrc"
+    }
+  ]
+}

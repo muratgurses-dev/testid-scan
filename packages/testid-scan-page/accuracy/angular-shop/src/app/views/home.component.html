@@ -1,0 +1,50 @@
+<section>
+  <h1>Products</h1>
+  <input placeholder="Search products" data-gt="home-search" (input)="q = $any($event.target).value">
+  <!-- TRAP if/else: the same name in both arms; both are "the Save button" (one ground-truth id) -->
+  @if (saving) {
+    <button disabled data-gt="home-save">Save</button>
+  } @else {
+    <button data-gt="home-save" (click)="saving = false">Save</button>
+  }
+  <!-- TRAP Angular only: the older *ngIf ... else <ng-template> form of the same thing -->
+  <button *ngIf="loading; else ready" disabled data-gt="home-refresh">Refresh</button>
+  <ng-template #ready><button data-gt="home-refresh" (click)="loading = false">Refresh</button></ng-template>
+  <!-- TRAP name set at runtime -->
+  <button [attr.aria-label]="favLabel" data-gt="home-favorite" (click)="fav = !fav">♥</button>
+  <!-- TRAP translation key: without the i18n file the scanner only knows the key -->
+  <button data-gt="home-subscribe" (click)="0">{{ 'home.subscribe' | translate }}</button>
+  <!-- TRAP hidden in this state: not rendered until a coupon exists -->
+  @if (coupon) {
+    <button data-gt="home-coupon" (click)="0">Apply coupon</button>
+  }
+  <!-- TRAP wrong target: this panel is closed, but the toast (created from code) also has a "Close" button -->
+  @if (panelOpen) {
+    <div class="panel">
+      <button data-gt="home-panel-close" (click)="panelOpen = false">Close</button>
+    </div>
+  }
+  <!-- TRAP portal: a dialog of this template, moved to <body> in code (as overlay libraries do). Its buttons are
+       correct targets outside <app-home>; the _ngcontent stamp of this component's styles still names their template. -->
+  @if (confirmOpen) {
+    <div #confirm role="dialog" aria-label="Confirm">
+      <button data-gt="home-confirm" (click)="confirmOpen = false">Confirm order</button>
+      <button data-gt="home-keep" (click)="confirmOpen = false">Keep shopping</button>
+    </div>
+  }
+  <!-- TRAP portal with one button, also moved to <body>: the _ngcontent stamp still names this template -->
+  @if (bannerOpen) {
+    <div #banner class="banner"><button data-gt="home-banner" (click)="bannerOpen = false">Got it</button></div>
+  }
+  <ul>
+    @for (p of products; track p.id) {
+      <li><app-product-row [product]="p" /></li>
+    }
+  </ul>
+  <!-- TRAP Angular only: one ng-template stamped out twice with ngTemplateOutlet -->
+  <ng-template #share><button data-gt="home-share" (click)="0">Share</button></ng-template>
+  <div class="top"><ng-container *ngTemplateOutlet="share"></ng-container></div>
+  <div class="bottom"><ng-container *ngTemplateOutlet="share"></ng-container></div>
+  <!-- TRAP clickable div without a role -->
+  <div class="promo" data-gt="home-promo" (click)="0">Get 10% off</div>
+</section>

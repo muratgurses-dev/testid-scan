@@ -1,0 +1,11 @@
+<app-header />
+<main>
+  @if (route() === '/') {
+    <app-home />
+  } @else if (route() === '/cart') {
+    <app-cart />
+  } @else if (route() === '/admin') {
+    <app-admin />
+  }
+</main>
+<app-footer />

@@ -1,0 +1,91 @@
+id,app,file,line,label,note
+bulletproof-react#19,bulletproof-react,features/auth/components/register-form.tsx,46,correct,One matching highlighted element corresponds to the indicated source control.
+bulletproof-react#27,bulletproof-react,features/comments/components/create-comment.tsx,40,incorrect,"Screenshot shows update-discussion drawer, but source line belongs to create-comment; Submit is a different action."
+bulletproof-react#17,bulletproof-react,features/auth/components/login-form.tsx,55,correct,One matching highlighted element corresponds to the indicated source control.
+bulletproof-react#2,bulletproof-react,app/routes/landing.tsx,61,correct,One matching highlighted element corresponds to the indicated source control.
+bulletproof-react#8,bulletproof-react,components/layouts/dashboard-layout.tsx,173,correct,One matching highlighted element corresponds to the indicated source control.
+bulletproof-react#40,bulletproof-react,features/users/components/delete-user.tsx,35,cannot tell,Delete confirmation was not reached; absence of a match does not establish correctness.
+bulletproof-react#47,bulletproof-react,features/users/components/users-list.tsx,25,incorrect,"Found discussions table, while source line is users-list table."
+bulletproof-react#42,bulletproof-react,features/users/components/update-profile.tsx,37,correct,One matching highlighted element corresponds to the indicated source control.
+bulletproof-react#37,bulletproof-react,features/discussions/components/update-discussion.tsx,73,correct,One matching highlighted element corresponds to the indicated source control.
+bulletproof-react#20,bulletproof-react,features/auth/components/register-form.tsx,52,correct,One matching highlighted element corresponds to the indicated source control.
+bulletproof-react#41,bulletproof-react,features/users/components/update-profile.tsx,31,correct,One matching highlighted element corresponds to the indicated source control.
+bulletproof-react#44,bulletproof-react,features/users/components/update-profile.tsx,69,correct,One matching highlighted element corresponds to the indicated source control.
+bulletproof-react#5,bulletproof-react,components/layouts/auth-layout.tsx,37,correct,One matching highlighted element corresponds to the indicated source control.
+bulletproof-react#31,bulletproof-react,features/discussions/components/create-discussion.tsx,56,correct,One matching highlighted element corresponds to the indicated source control.
+bulletproof-react#12,bulletproof-react,components/ui/table/pagination.tsx,93,cannot tell,Pagination next-page control is not visibly present in this state; cannot decide whether locator works when rendered.
+bulletproof-react#43,bulletproof-react,features/users/components/update-profile.tsx,64,correct,One matching highlighted element corresponds to the indicated source control.
+bulletproof-react#14,bulletproof-react,features/auth/components/login-form.tsx,29,correct,One matching highlighted element corresponds to the indicated source control.
+bulletproof-react#3,bulletproof-react,app/routes/not-found.tsx,9,correct,One matching highlighted element corresponds to the indicated source control.
+bulletproof-react#24,bulletproof-react,features/auth/components/register-form.tsx,96,correct,One matching highlighted element corresponds to the indicated source control.
+bulletproof-react#45,bulletproof-react,features/users/components/update-profile.tsx,74,correct,One matching highlighted element corresponds to the indicated source control.
+bulletproof-react#36,bulletproof-react,features/discussions/components/update-discussion.tsx,45,correct,One matching highlighted element corresponds to the indicated source control.
+bulletproof-react#4,bulletproof-react,components/errors/main.tsx,10,cannot tell,No screenshot of the error/refresh component; cannot assess the intended target.
+bulletproof-react#35,bulletproof-react,features/discussions/components/update-discussion.tsx,39,correct,One matching highlighted element corresponds to the indicated source control.
+bulletproof-react#33,bulletproof-react,features/discussions/components/discussions-list.tsx,43,correct,One matching highlighted element corresponds to the indicated source control.
+bulletproof-react#29,bulletproof-react,features/discussions/components/create-discussion.tsx,31,correct,One matching highlighted element corresponds to the indicated source control.
+bulletproof-react#15,bulletproof-react,features/auth/components/login-form.tsx,35,correct,One matching highlighted element corresponds to the indicated source control.
+bulletproof-react#1,bulletproof-react,app/routes/landing.tsx,56,correct,One matching highlighted element corresponds to the indicated source control.
+bulletproof-react#23,bulletproof-react,features/auth/components/register-form.tsx,88,correct,One matching highlighted element corresponds to the indicated source control.
+bulletproof-react#13,bulletproof-react,components/ui/table/table.tsx,14,correct,One matching highlighted element corresponds to the indicated source control.
+bulletproof-react#0,bulletproof-react,app/routes/landing.tsx,33,correct,One matching highlighted element corresponds to the indicated source control.
+vue3-realworld#37,vue3-realworld,pages/Settings.vue,37,correct,One matching highlighted element corresponds to the indicated source control.
+vue3-realworld#33,vue3-realworld,pages/Register.vue,48,correct,One matching highlighted element corresponds to the indicated source control.
+vue3-realworld#16,vue3-realworld,components/ArticlesListArticlePreview.vue,2,incorrect,"Multiple matching elements are highlighted, so locator is not unique."
+vue3-realworld#28,vue3-realworld,pages/NotFound.vue,7,incorrect,"Multiple matching elements are highlighted, so locator is not unique."
+vue3-realworld#30,vue3-realworld,pages/Register.vue,10,correct,One matching highlighted element corresponds to the indicated source control.
+vue3-realworld#12,vue3-realworld,components/ArticleDetailCommentsForm.vue,15,correct,One matching highlighted element corresponds to the indicated source control.
+vue3-realworld#3,vue3-realworld,components/AppNavigation.vue,4,incorrect,"Multiple matching elements are highlighted, so locator is not unique."
+vue3-realworld#14,vue3-realworld,components/ArticleDetailMeta.vue,45,incorrect,"Multiple matching elements are highlighted, so locator is not unique."
+vue3-realworld#38,vue3-realworld,pages/Settings.vue,46,correct,One matching highlighted element corresponds to the indicated source control.
+vue3-realworld#41,vue3-realworld,pages/Settings.vue,75,correct,One matching highlighted element corresponds to the indicated source control.
+vue3-realworld#35,vue3-realworld,pages/Settings.vue,19,correct,One matching highlighted element corresponds to the indicated source control.
+vue3-realworld#24,vue3-realworld,pages/Login.vue,10,correct,One matching highlighted element corresponds to the indicated source control.
+vue3-realworld#39,vue3-realworld,pages/Settings.vue,55,correct,One matching highlighted element corresponds to the indicated source control.
+vue3-realworld#31,vue3-realworld,pages/Register.vue,28,correct,One matching highlighted element corresponds to the indicated source control.
+vue3-realworld#36,vue3-realworld,pages/Settings.vue,28,correct,One matching highlighted element corresponds to the indicated source control.
+vue3-realworld#2,vue3-realworld,components/AppFooter.vue,19,correct,One matching highlighted element corresponds to the indicated source control.
+vue3-realworld#20,vue3-realworld,pages/EditArticle.vue,17,correct,One matching highlighted element corresponds to the indicated source control.
+vue3-realworld#4,vue3-realworld,components/AppPagination.vue,2,correct,One matching highlighted element corresponds to the indicated source control.
+vue3-realworld#23,vue3-realworld,pages/EditArticle.vue,62,correct,One matching highlighted element corresponds to the indicated source control.
+vue3-realworld#11,vue3-realworld,components/ArticleDetailCommentsForm.vue,5,correct,One matching highlighted element corresponds to the indicated source control.
+vue3-realworld#1,vue3-realworld,components/AppFooter.vue,11,correct,One matching highlighted element corresponds to the indicated source control.
+vue3-realworld#40,vue3-realworld,pages/Settings.vue,63,correct,One matching highlighted element corresponds to the indicated source control.
+vue3-realworld#10,vue3-realworld,components/ArticleDetailCommentsForm.vue,3,correct,One matching highlighted element corresponds to the indicated source control.
+vue3-realworld#0,vue3-realworld,components/AppFooter.vue,4,incorrect,"Multiple matching elements are highlighted, so locator is not unique."
+vue3-realworld#32,vue3-realworld,pages/Register.vue,38,correct,One matching highlighted element corresponds to the indicated source control.
+vue3-realworld#17,vue3-realworld,components/ArticlesListArticlePreview.vue,31,incorrect,"Multiple matching elements are highlighted, so locator is not unique."
+vue3-realworld#13,vue3-realworld,components/ArticleDetailCommentsForm.vue,29,correct,One matching highlighted element corresponds to the indicated source control.
+vue3-realworld#5,vue3-realworld,components/ArticleDetail.vue,2,correct,One matching highlighted element corresponds to the indicated source control.
+vue3-realworld#8,vue3-realworld,components/ArticleDetail.vue,40,correct,One matching highlighted element corresponds to the indicated source control.
+vue3-realworld#22,vue3-realworld,pages/EditArticle.vue,35,correct,One matching highlighted element corresponds to the indicated source control.
+angular-ngrx-material-starter#97,angular-ngrx-material-starter,app/features/examples/notifications/components/notifications.component.html,17,cannot tell,Notifications view appears incompletely rendered; cannot establish target visibility.
+angular-ngrx-material-starter#8,angular-ngrx-material-starter,app/features/about/about/about.component.html,9,correct,One matching highlighted element corresponds to the indicated source control.
+angular-ngrx-material-starter#82,angular-ngrx-material-starter,app/features/examples/form/components/form.component.html,39,incorrect,Email input is present but translated-key label locator finds no element.
+angular-ngrx-material-starter#114,angular-ngrx-material-starter,app/features/settings/settings/settings-container.component.html,47,correct,One matching highlighted element corresponds to the indicated source control.
+angular-ngrx-material-starter#30,angular-ngrx-material-starter,app/features/about/about/about.component.html,168,correct,One matching highlighted element corresponds to the indicated source control.
+angular-ngrx-material-starter#28,angular-ngrx-material-starter,app/features/about/about/about.component.html,156,correct,One matching highlighted element corresponds to the indicated source control.
+angular-ngrx-material-starter#113,angular-ngrx-material-starter,app/features/settings/settings/settings-container.component.html,13,correct,One matching highlighted element corresponds to the indicated source control.
+angular-ngrx-material-starter#48,angular-ngrx-material-starter,app/features/about/about/about.component.html,282,correct,One matching highlighted element corresponds to the indicated source control.
+angular-ngrx-material-starter#37,angular-ngrx-material-starter,app/features/about/about/about.component.html,210,correct,One matching highlighted element corresponds to the indicated source control.
+angular-ngrx-material-starter#27,angular-ngrx-material-starter,app/features/about/about/about.component.html,150,correct,One matching highlighted element corresponds to the indicated source control.
+angular-ngrx-material-starter#72,angular-ngrx-material-starter,app/features/examples/crud/components/crud.component.html,78,cannot tell,"Cancel button is conditional on edit mode, which is not shown."
+angular-ngrx-material-starter#38,angular-ngrx-material-starter,app/features/about/about/about.component.html,216,correct,One matching highlighted element corresponds to the indicated source control.
+angular-ngrx-material-starter#74,angular-ngrx-material-starter,app/features/examples/elements/elements.component.html,40,incorrect,"Element page contains links, but proposed untranslated key does not locate the target."
+angular-ngrx-material-starter#17,angular-ngrx-material-starter,app/features/about/about/about.component.html,88,correct,One matching highlighted element corresponds to the indicated source control.
+angular-ngrx-material-starter#111,angular-ngrx-material-starter,app/features/feature-list/feature-list/feature-list.component.html,20,cannot tell,No screenshot of the relevant target; cannot assess.
+angular-ngrx-material-starter#86,angular-ngrx-material-starter,app/features/examples/form/components/form.component.html,53,correct,One matching highlighted element corresponds to the indicated source control.
+angular-ngrx-material-starter#1,angular-ngrx-material-starter,app/app/app.component.html,52,cannot tell,Logout menu item is not displayed while the menu is closed.
+angular-ngrx-material-starter#36,angular-ngrx-material-starter,app/features/about/about/about.component.html,204,correct,One matching highlighted element corresponds to the indicated source control.
+angular-ngrx-material-starter#33,angular-ngrx-material-starter,app/features/about/about/about.component.html,186,correct,One matching highlighted element corresponds to the indicated source control.
+angular-ngrx-material-starter#61,angular-ngrx-material-starter,app/features/about/about/about.component.html,372,correct,One matching highlighted element corresponds to the indicated source control.
+angular-ngrx-material-starter#84,angular-ngrx-material-starter,app/features/examples/form/components/form.component.html,45,cannot tell,Email validation error is conditional and not visible.
+angular-ngrx-material-starter#78,angular-ngrx-material-starter,app/features/examples/form/components/form.component.html,21,incorrect,"Form input appears present, but translated-key label locator finds no element."
+angular-ngrx-material-starter#54,angular-ngrx-material-starter,app/features/about/about/about.component.html,318,correct,One matching highlighted element corresponds to the indicated source control.
+angular-ngrx-material-starter#108,angular-ngrx-material-starter,app/features/examples/todos/components/todos-container.component.html,26,cannot tell,Filter menu item is not displayed in this state.
+angular-ngrx-material-starter#32,angular-ngrx-material-starter,app/features/about/about/about.component.html,180,correct,One matching highlighted element corresponds to the indicated source control.
+angular-ngrx-material-starter#49,angular-ngrx-material-starter,app/features/about/about/about.component.html,288,correct,One matching highlighted element corresponds to the indicated source control.
+angular-ngrx-material-starter#104,angular-ngrx-material-starter,app/features/examples/simple-state-management/components/user.component.html,83,correct,One matching highlighted element corresponds to the indicated source control.
+angular-ngrx-material-starter#83,angular-ngrx-material-starter,app/features/examples/form/components/form.component.html,41,cannot tell,Required validation error is conditional and not visible.
+angular-ngrx-material-starter#90,angular-ngrx-material-starter,app/features/examples/form/components/form.component.html,72,cannot tell,Minimum-length validation error is conditional and not visible.
+angular-ngrx-material-starter#98,angular-ngrx-material-starter,app/features/examples/notifications/components/notifications.component.html,24,cannot tell,Notifications view appears incompletely rendered; cannot establish target visibility.
