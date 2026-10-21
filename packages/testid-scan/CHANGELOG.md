@@ -3,6 +3,10 @@
 Versions before 1.0 were prototypes and were not published to npm. The JSON keeps `schemaVersion: 1`: fields are only
 ever added. CLI options are unchanged.
 
+## 1.0.1 — 2026-10-21
+
+- Package links (repository, homepage, issues) now point to github.com/muratgurses-dev/testid-scan. No change in behaviour.
+
 ## 1.0.0 — 2026-10-16
 
 First public release, as open source (MIT). No change in behaviour since 0.2.1. From here on the version follows
