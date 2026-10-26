@@ -16,14 +16,14 @@ import type { ElementRecord, FileResult, Framework, ScanResult } from './types.t
 function classifyUnits(units: Unit[], cfg: Config): ElementRecord[][] {
   if (cfg.followComponents) applyComponentUsage(units);
   const shared = cfg.followComponents ? namesSharedOnPage(units) : undefined;
-  return units.map((unit) => classify(unit.candidates, unit.file, cfg, shared));
+  return units.map((unit) => classify(unit.candidates, unit.file, cfg, shared, unit.framework));
 }
 
 /** Scan one Angular template string. Handy for editor plugins and unit tests. */
 export function scanTemplate(source: string, options: Partial<Config> = {}, file = 'template.html'): ElementRecord[] {
   const cfg = mergeConfig(defaultConfig, options);
   if (cfg.placeholderAsLabel === 'auto') cfg.placeholderAsLabel = 'never';
-  return classify(angularCandidates(source, createContext(cfg)), file, cfg);
+  return classify(angularCandidates(source, createContext(cfg)), file, cfg, undefined, 'angular');
 }
 
 /** Scan the JSX in one React source string. The file name decides between TSX and JSX syntax. */
@@ -37,7 +37,7 @@ export function scanVue(source: string, options: Partial<Config> = {}, file = 'C
   const cfg = mergeConfig(defaultConfig, options);
   const template = vueTemplate(source);
   if ('skipped' in template) return [];
-  return classify(vueCandidates(template.source, createContext(cfg), template.lineOffset), file, cfg);
+  return classify(vueCandidates(template.source, createContext(cfg), template.lineOffset), file, cfg, undefined, 'vue');
 }
 
 /** Dependencies of each package.json at or above `root`, nearest first. */
