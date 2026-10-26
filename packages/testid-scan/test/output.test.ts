@@ -67,3 +67,11 @@ test('command line: --baseline makes the gate fail on new findings only', () => 
   assert.match(worse.stdout, /src\/a\.component\.html\n\s+4 {2}Missing name/);
   assert.doesNotMatch(worse.stdout, /\n\s+1 {2}Needs test ID/);
 });
+
+test('report: a repeated element that cannot be scoped does not show its locator as if it were unique', () => {
+  const src = '<table>\n  <tr *ngFor="let o of orders">\n    <td><button (click)="open(o)">Open</button></td>\n  </tr>\n</table>\n';
+  const md = renderMarkdown(scan(project({ 'a/a.component.html': src }), { framework: 'angular' }));
+  const line = md.split('\n').find((l) => l.includes('a/a.component.html:3') && l.includes('fingerprint'));
+  assert.ok(line, 'the button is under Manual review');
+  assert.match(line, /`page\.getByRole\('button', \{ name: 'Open', exact: true \}\)` \| repeated: on its own this matches every record$/);
+});

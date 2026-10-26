@@ -3,6 +3,15 @@
 Versions before 1.0 were prototypes and were not published to npm. The JSON keeps `schemaVersion: 1`: fields are only
 ever added. CLI options are unchanged.
 
+## Unreleased
+
+### Fixed
+- **The Markdown report showed a repeated element's locator under Manual review without its note.** For a button in an
+  `*ngFor` row with no record key, `page.getByRole('button', { name: 'Open', exact: true })` read as if it were unique,
+  while on its own it matches every row (a strict-mode error in Playwright). The line now carries the locator note
+  ("repeated: on its own this matches every record"), as the `--locators` section and the JSON already did. JSON and
+  statuses are unchanged. Regression test in `test/output.test.ts`.
+
 ## 1.0.1 — 2026-10-21
 
 - Package links (repository, homepage, issues) now point to github.com/muratgurses-dev/testid-scan. No change in behaviour.
