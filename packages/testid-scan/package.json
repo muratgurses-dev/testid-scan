@@ -1,6 +1,6 @@
 {
   "name": "testid-scan",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Static scanner for Angular templates, React components and Vue single-file components: shows which elements a UI test can find by role and accessible name, and which ones need a test ID.",
   "keywords": [
     "angular",

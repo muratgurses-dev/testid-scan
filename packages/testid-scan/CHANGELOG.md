@@ -3,7 +3,7 @@
 Versions before 1.0 were prototypes and were not published to npm. The JSON keeps `schemaVersion: 1`: fields are only
 ever added. CLI options are unchanged.
 
-## Unreleased
+## 1.1.1 — 2026-10-27
 
 ### Changed
 - **An element whose content is only an icon says why it has no name, and what to write.** Instead of the general
