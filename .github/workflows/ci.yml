@@ -50,6 +50,45 @@ jobs:
           node dist/cli.js "file://$PWD/test/fixtures/orders.html" --out "$RUNNER_TEMP/report.md" --format quiet
       - run: node scripts/smoke.mjs
 
+  # Gherkin steps from a page scan: build, tests and an install from the packed tarball on every Node version.
+  testid-scan-bdd:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node: [18, 20, 22, 24]
+    defaults:
+      run:
+        working-directory: packages/testid-scan-bdd
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+      - run: npm ci
+      - run: npm run build
+      - run: npm test
+      - run: node dist/cli.js --version
+      - run: node scripts/smoke.mjs
+
+  # The generated steps in a real browser: a feature file must pass with playwright-bdd, and steps for elements the
+  # catalog lists as not available must fail.
+  testid-scan-bdd-e2e:
+    needs: [testid-scan-bdd]
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: packages/testid-scan-bdd
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci && npm run build
+      - run: npm run e2e
+        env:
+          E2E_INSTALL_BROWSER: '1'
+
   # Accuracy regression of both tools together: the corpora against accuracy/baseline.json and accuracy/targets.json,
   # and the check that instrumented builds look the same as plain ones.
   accuracy:

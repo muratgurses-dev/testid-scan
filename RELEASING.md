@@ -16,6 +16,7 @@ sed -i.bak 's/GITHUB_OWNER/<your-github-user>/g' packages/*/package.json && rm p
    - testid-scan follows semantic versioning from 1.0: new JSON fields or options are a minor version; anything that
      breaks the JSON (`schemaVersion`) or removes an option is a major version.
    - testid-scan-page is in beta (0.x): a minor version may change verdicts, always toward fewer wrong ones.
+   - testid-scan-bdd is in beta (0.x): a minor version may rename or remove steps; say so in the CHANGELOG.
 3. Check what will be published (only `dist`, the README, the license, and testid-scan's example config):
 
    ```bash
@@ -30,7 +31,7 @@ sed -i.bak 's/GITHUB_OWNER/<your-github-user>/g' packages/*/package.json && rm p
    npm publish          # publishConfig.access is public
    ```
 
-5. Tag and push: `git tag testid-scan-v1.0.0` (or `testid-scan-page-v0.9.0`), `git push --tags`, and create a GitHub
+5. Tag and push: `git tag testid-scan-v1.0.0` (or `testid-scan-page-v0.9.0`, `testid-scan-bdd-v0.1.0`), `git push --tags`, and create a GitHub
    release from the CHANGELOG section.
 
 ## First release

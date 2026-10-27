@@ -8,6 +8,7 @@ locator a tool recommended, and what it found on the page.
 ```bash
 cd packages/testid-scan && npm install && npm test
 cd ../testid-scan-page && npm install && npx playwright install chromium && npm test
+cd ../testid-scan-bdd && npm install && npm test && npm run e2e
 ```
 
 Node 18 or later. Each package has its own `package-lock.json`; there are no workspaces, so run commands inside the
