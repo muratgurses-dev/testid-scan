@@ -7,6 +7,7 @@ import type * as TS from 'typescript';
 import type { ComponentSpec } from '../config.ts';
 import { DYNAMIC_TEXT, joinText, translateKey } from '../i18n.ts';
 import type { ScanContext, Text } from '../i18n.ts';
+import { iconDescription, iconsOf } from '../html/names.ts';
 import { entityKeyOf, makeTestId } from '../testid.ts';
 import type { TestId } from '../testid.ts';
 import { ROLE_KINDS } from '../types.ts';
@@ -294,7 +295,8 @@ export function reactCandidates(text: string, fileName: string, ctx: ScanContext
   };
 
   const elementText = (el: El, assumed: string[]): Text => {
-    if (isTrue(el.attrs.get('aria-hidden')) || el.attrs.has('hidden') || isIcon(el)) return EMPTY;
+    if (isTrue(el.attrs.get('aria-hidden')) || el.attrs.has('hidden')) return EMPTY;
+    if (isIcon(el)) return { ...EMPTY, icons: [iconDescription(el.tag, el.children.length ? childrenText(el.children, []).text : '')] };
     if (el.html === 'img') return attrText(el.attrs.get('alt')) ?? EMPTY;
     if (!el.html && Object.hasOwn(cfg.translateComponents, el.tag)) {
       const key = attrText(el.attrs.get(cfg.translateComponents[el.tag]));
@@ -402,6 +404,7 @@ export function reactCandidates(text: string, fileName: string, ctx: ScanContext
       keys: chosen?.keys ?? [],
       missingKeys: chosen?.missingKeys ?? [],
       hint: !chosen && assumed.length ? `${[...new Set(assumed)].map((a) => `<${a} />`).join(', ')} assumed to render no text` : undefined,
+      ...iconsOf(chosen, candidates),
     };
   };
 

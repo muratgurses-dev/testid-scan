@@ -2,7 +2,11 @@ import { readFileSync } from 'node:fs';
 import type { Config } from './config.ts';
 
 /** A piece of text found in a template; `dynamic` when part of it is only known at runtime. */
-export interface Text { text: string; dynamic: boolean; keys: string[]; missingKeys: string[] }
+export interface Text {
+  text: string; dynamic: boolean; keys: string[]; missingKeys: string[];
+  /** Icons left out of the text because assistive technology does not read them, e.g. `<mat-icon> "close"`. */
+  icons?: string[];
+}
 
 export const DYNAMIC_TEXT: Text = { text: '', dynamic: true, keys: [], missingKeys: [] };
 
@@ -49,5 +53,6 @@ export function joinText(parts: Text[]): Text {
     dynamic: parts.some((p) => p.dynamic),
     keys: parts.flatMap((p) => p.keys),
     missingKeys: parts.flatMap((p) => p.missingKeys),
+    ...(parts.some((p) => p.icons?.length) ? { icons: parts.flatMap((p) => p.icons ?? []) } : {}),
   };
 }

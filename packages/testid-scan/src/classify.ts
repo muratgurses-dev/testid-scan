@@ -14,6 +14,29 @@ import type { AccessibilityFinding, Candidate, Counts, ElementRecord, Framework,
 const NOT_RENDERED = new Set(['ng-container', 'ng-template', 'template', 'Fragment', 'React.Fragment', '']);
 const UNSCOPED_REPEAT = 'repeated element: scope the locator to a unique parent, or give the record a stable key';
 
+/** Prefixes of icon font names that are not part of what the icon means: mdi-close, fa-trash, bi-x. */
+const ICON_PREFIX = /^(?:mdi|fa[srlbd]?|bi|ion|icon|ti|ri|las|lab|la|material-icons|material-symbols)[-_]/i;
+
+/** "close" from <mat-icon> "close", "Shopping cart" from <ShoppingCartIcon>; undefined when nothing fits. */
+function iconLabel(icon: string): string | undefined {
+  const ligature = /"([^"]+)"$/.exec(icon)?.[1];
+  const component = /^<([A-Z]\w*?)(?:Outlined|Rounded|Sharp|TwoTone|Filled)?Icon>$/.exec(icon)?.[1];
+  const words = ligature ? ligature.replace(ICON_PREFIX, '').replace(/[_-]+/g, ' ')
+    : component ? component.replace(/([a-z0-9])([A-Z])/g, '$1 $2').toLowerCase() : '';
+  const label = words.replace(/\s+/g, ' ').trim();
+  return label ? label[0].toUpperCase() + label.slice(1) : undefined;
+}
+
+/**
+ * Why an element whose content is only an icon has no name, and what to write:
+ * `no accessible name: <mat-icon> "close" is an icon, which assistive technology does not read; add aria-label="Close"`.
+ */
+function iconReason(icons: string[]): string {
+  const label = iconLabel(icons[0]);
+  const which = icons.length === 1 ? `${icons[0]} is an icon, which assistive technology does not read` : `${icons.join(', ')} are icons, which assistive technology does not read`;
+  return `no accessible name: ${which}; add ${label ? `aria-label="${label}"` : 'an aria-label that says what it does'}`;
+}
+
 
 /** Kinds a user clicks or types into. One of them inside a button or link is invalid nesting. */
 const INTERACTIVE = new Set(['button', 'link', 'input', 'select', 'checkbox', 'radio', 'toggle', 'menu-item', 'tab']);
@@ -333,6 +356,9 @@ export function classify(candidates: Candidate[], file: string, cfg: Config, sha
       const hint = recordKeyHint(d.i);
       if (hint) d.record.reason = `${ownReason} (${hint})`;
     }
+    // Say why the icon inside does not name the element: "it says close" is the usual objection. After the fingerprint
+    // text too, like the record key hint.
+    if (d.record.status === 'Missing name' && d.name.icons?.length && !d.name.hint) d.record.reason = iconReason(d.name.icons);
     // say where the repetition comes from when it is not visible in this file
     if (d.c.repeatedBy && !OK_STATUSES.has(d.record.status) && d.record.status !== 'Missing name') d.record.reason = `${d.record.reason} [${d.c.repeatedBy}]`;
     d.record.accessibilityFindings = findingsOf(d);

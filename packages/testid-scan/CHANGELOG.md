@@ -3,6 +3,18 @@
 Versions before 1.0 were prototypes and were not published to npm. The JSON keeps `schemaVersion: 1`: fields are only
 ever added. CLI options are unchanged.
 
+## Unreleased
+
+### Changed
+- **An element whose content is only an icon says why it has no name, and what to write.** Instead of the general
+  "no accessible name (add visible text, a label or aria-label)", the reason is
+  `no accessible name: <mat-icon> "close" is an icon, which assistive technology does not read; add aria-label="Close"`.
+  The suggested label comes from the icon's ligature (`shopping_cart` → "Shopping cart", without icon font prefixes
+  such as `mdi-` or `fa-`) or, in React, from the icon component's name (`<ShoppingCartOutlinedIcon>` →
+  "Shopping cart"); without one (`<svg>`), it asks for an aria-label that says what the element does. A component
+  the scanner cannot see into keeps its "assumed to render no text" reason. Statuses, accessibility findings and
+  their certainty, fingerprints and locators are unchanged. Tests in `test/locators.test.ts`.
+
 ## 1.1.0 — 2026-10-27
 
 The Markdown report has a new default layout; `--detailed` keeps the 1.0 layout. Statuses, counts, fingerprints, the
