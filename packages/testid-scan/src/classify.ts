@@ -8,7 +8,11 @@ import type { Config } from './config.ts';
 import { attributeName, nameLocator, quote } from './locator.ts';
 import { namingViolations, typeSuffix } from './testid.ts';
 import { NO_NAME, exclusive } from './types.ts';
-import type { AccessibilityFinding, Candidate, Counts, ElementRecord, LocatorScope, NameResult, Status } from './types.ts';
+import type { AccessibilityFinding, Candidate, Counts, ElementRecord, Framework, LocatorScope, NameResult, Status } from './types.ts';
+
+/** Tags that are not in the DOM, so an attribute on them does not reach the page. */
+const NOT_RENDERED = new Set(['ng-container', 'ng-template', 'template', 'Fragment', 'React.Fragment', '']);
+const UNSCOPED_REPEAT = 'repeated element: scope the locator to a unique parent, or give the record a stable key';
 
 
 /** Kinds a user clicks or types into. One of them inside a button or link is invalid nesting. */
@@ -35,7 +39,7 @@ interface Draft {
   record: ElementRecord;
 }
 
-export function classify(candidates: Candidate[], file: string, cfg: Config, sharedOnPage?: Map<Candidate, string>): ElementRecord[] {
+export function classify(candidates: Candidate[], file: string, cfg: Config, sharedOnPage?: Map<Candidate, string>, framework?: Framework): ElementRecord[] {
   // A test ID has to change with the innermost loop: one built only from an outer record repeats for every inner item.
   // (when the innermost repetition comes from another template, the "variables" are this component's inputs)
   const uses = (exprs: string[], vars: string[], c?: Candidate) => usesVariable(exprs.map(withoutReceiver), vars, Boolean(c?.loops.at(-1)?.fromUsage));
@@ -168,7 +172,7 @@ export function classify(candidates: Candidate[], file: string, cfg: Config, sha
         if (d.repeated) {
           if (twice) return ['Needs test ID', `placeholder "${text}" appears more than once in the repeated block`];
           if (d.scopable) return ['OK (name)', 'found by its placeholder (it has no label); repeated: narrow down to its record first'];
-          return ['Manual review', 'repeated element: scope the locator to a unique parent, or give the record a stable key'];
+          return ['Manual review', UNSCOPED_REPEAT];
         }
         if (twice) return ['Needs test ID', `placeholder "${text}" appears more than once`];
         return ['OK (name)', 'found by its placeholder; it has no label (see Accessibility findings)'];
@@ -183,7 +187,7 @@ export function classify(candidates: Candidate[], file: string, cfg: Config, sha
     if (d.repeated) {
       if (duplicate) return ['Needs test ID', `name "${name.label}" appears more than once in the repeated block`];
       if (d.scopable) return ['OK (name)', 'repeated: narrow down to its record first, then use the role and name'];
-      return ['Manual review', 'repeated element: scope the locator to a unique parent, or give the record a stable key'];
+      return ['Manual review', UNSCOPED_REPEAT];
     }
     if (/^skip (to|forwards|backwards)\b/i.test(name.label)) return ['OK (name)', 'skip link'];
     if (duplicate) return ['Needs test ID', `name "${name.label}" appears more than once`];
@@ -223,6 +227,34 @@ export function classify(candidates: Candidate[], file: string, cfg: Config, sha
     if (around >= 0) return around;
     const table = findAncestor(i, (a, p) => Boolean(a.isTable) && tablesWithKeyedRow.has(p));
     return table >= 0 ? tablesWithKeyedRow.get(table) as number : -1;
+  };
+  /**
+   * The element a record key would go on so a test can narrow down to one record: the repeated row of the table the
+   * element is in (Angular Material declares cells per column, so a cell is not the record), else the element that
+   * starts the innermost loop. -1 when that is not in this template or not in the DOM.
+   */
+  const recordHost = (i: number): number => {
+    const c = candidates[i];
+    const loop = c.loops.at(-1);
+    if (!loop || loop.fromUsage) return -1;
+    const table = findAncestor(i, (a) => Boolean(a.isTable));
+    if (table >= 0) {
+      const row = candidates.findIndex((r, j) => r.kind === 'row' && r.loops.length > 0 && findAncestor(j, (a) => Boolean(a.isTable)) === table);
+      if (row >= 0) return row;
+    }
+    let host = i;
+    while (candidates[host].parent >= 0 && candidates[candidates[host].parent].loops.length === c.loops.length) host = candidates[host].parent;
+    return NOT_RENDERED.has(candidates[host].tag) ? -1 : host;
+  };
+  /** Where and how to add the record key, e.g. `[attr.data-<entity>-id]="o.id" on the <tr> at line 5`. */
+  const recordKeyHint = (i: number): string | undefined => {
+    const host = recordHost(i);
+    if (host < 0) return undefined;
+    const value = `${candidates[host].loops.at(-1)?.record ?? '<record>'}.id`;
+    const attribute = framework === 'vue' ? `:data-<entity>-id="${value}"`
+      : framework === 'react' ? `data-<entity>-id={${value}}`
+      : `[attr.data-<entity>-id]="${value}"`;
+    return `e.g. ${attribute} on the <${candidates[host].tag}> at line ${candidates[host].line}`;
   };
   const keyedByTestId = (c: Candidate) => c.testId?.kind === 'dynamic' && uses(c.testId.exprs, itemVars(c), c);
   const recordLocator = (i: number): string => {
@@ -295,6 +327,12 @@ export function classify(candidates: Candidate[], file: string, cfg: Config, sha
       }
     }
     const ownReason = d.record.reason ?? '';
+    // Point at where the record key would go. Added after the fingerprint text, which stays as it was, so reviewed
+    // markers stay valid and moving code (the line number) does not invalidate them.
+    if (ownReason === UNSCOPED_REPEAT) {
+      const hint = recordKeyHint(d.i);
+      if (hint) d.record.reason = `${ownReason} (${hint})`;
+    }
     // say where the repetition comes from when it is not visible in this file
     if (d.c.repeatedBy && !OK_STATUSES.has(d.record.status) && d.record.status !== 'Missing name') d.record.reason = `${d.record.reason} [${d.c.repeatedBy}]`;
     d.record.accessibilityFindings = findingsOf(d);

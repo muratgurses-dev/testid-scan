@@ -103,7 +103,11 @@ export function reactCandidates(text: string, fileName: string, ctx: ScanContext
       if (ts.isCallExpression(parent) && parent.arguments.includes(fn as TS.Expression)) {
         const callee = parent.expression;
         const isLoop = (ts.isPropertyAccessExpression(callee) && ['map', 'flatMap'].includes(callee.name.text)) || callee.getText(sf) === 'Array.from';
-        if (isLoop) loops.unshift({ itemVars: [...bindingNames(fn.parameters[0]), ...localsOf(fn)], indexVars: bindingNames(fn.parameters[1]) });
+        if (isLoop) {
+          const first = fn.parameters[0];
+          const record = first && ts.isIdentifier(first.name) ? first.name.text : undefined;
+          loops.unshift({ itemVars: [...bindingNames(first), ...localsOf(fn)], indexVars: bindingNames(fn.parameters[1]), record });
+        }
         continue;
       }
       // function rowRenderer({ index }) { ... } handed to a virtual list as rowRenderer={rowRenderer}

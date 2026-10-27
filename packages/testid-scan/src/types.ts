@@ -7,6 +7,8 @@ export type Framework = 'angular' | 'react' | 'vue';
 export interface Loop {
   itemVars: string[];
   indexVars: string[];
+  /** The one name the record is bound to (`let o of`, `(o) =>`, `o in items`); absent when it is destructured. */
+  record?: string;
   /** The repetition comes from how another template uses this component; the variables are its inputs. */
   fromUsage?: boolean;
 }

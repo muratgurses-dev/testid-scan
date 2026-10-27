@@ -34,6 +34,7 @@ function ownLoop(attrs: Attrs, repeatDirectives: string[]): Loop | undefined {
     if (value === '' || value === '$implicit') loop.itemVars.push(name.slice(4));
     else if (value === 'index') loop.indexVars.push(name.slice(4));
   }
+  if (loop.itemVars.length === 1) loop.record = loop.itemVars[0];
   return loop;
 }
 

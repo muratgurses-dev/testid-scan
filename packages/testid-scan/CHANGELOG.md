@@ -12,6 +12,16 @@ ever added. CLI options are unchanged.
   ("repeated: on its own this matches every record"), as the `--locators` section and the JSON already did. JSON and
   statuses are unchanged. Regression test in `test/output.test.ts`.
 
+### Changed
+- **A repeated element that cannot be scoped now says where its record key goes.** The reason "give the record a
+  stable key" gets an example in the framework's own syntax, on the element that starts the loop:
+  `(e.g. [attr.data-<entity>-id]="o.id" on the <tr> at line 5)`, `data-<entity>-id={item.id}` in React,
+  `:data-<entity>-id="item.id"` in Vue. In a table the key goes on the repeated row (in Angular Material, the
+  `*matRowDef` row, not the `*matCellDef` cell). A destructured record gets `<record>.id`; a loop on `<ng-container>`,
+  `<ng-template>` or `<template>` gets no example, since an attribute there does not reach the DOM. The hint is not
+  part of the fingerprint, so reviewed markers stay valid and moving code does not invalidate them. Statuses and
+  locators are unchanged. The JSON schema is unchanged. Tests in `test/locators.test.ts`.
+
 ## 1.0.1 — 2026-10-21
 
 - Package links (repository, homepage, issues) now point to github.com/muratgurses-dev/testid-scan. No change in behaviour.
