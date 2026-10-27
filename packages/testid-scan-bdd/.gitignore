@@ -1,0 +1,7 @@
+node_modules
+dist
+.test-build
+.e2e
+*.tgz
+testid-steps.md
+.page-report.md

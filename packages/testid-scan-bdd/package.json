@@ -1,0 +1,61 @@
+{
+  "name": "testid-scan-bdd",
+  "version": "0.1.0",
+  "description": "Turns a testid-scan-page scan into Gherkin steps for playwright-bdd: a catalog of the steps you can write on each page, and step definitions that find each element the way the scan did. No source code needed.",
+  "keywords": [
+    "bdd",
+    "gherkin",
+    "cucumber",
+    "playwright",
+    "playwright-bdd",
+    "testing",
+    "data-testid",
+    "accessibility",
+    "locators",
+    "e2e"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/muratgurses-dev/testid-scan.git",
+    "directory": "packages/testid-scan-bdd"
+  },
+  "homepage": "https://github.com/muratgurses-dev/testid-scan/tree/main/packages/testid-scan-bdd#readme",
+  "bugs": {
+    "url": "https://github.com/muratgurses-dev/testid-scan/issues"
+  },
+  "type": "module",
+  "bin": {
+    "testid-scan-bdd": "dist/cli.js"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "tsc -p tsconfig.test.json && node scripts/run-tests.mjs",
+    "e2e": "node scripts/e2e.mjs",
+    "prepublishOnly": "npm run build && npm test",
+    "smoke": "node scripts/smoke.mjs"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.9.3"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

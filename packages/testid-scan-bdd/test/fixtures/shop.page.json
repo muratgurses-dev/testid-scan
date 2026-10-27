@@ -1,0 +1,266 @@
+{
+  "schemaVersion": 1,
+  "scannedOn": "2026-10-27",
+  "testIdAttribute": "data-testid",
+  "pages": [
+    {
+      "url": "http://localhost/shop.html",
+      "title": "Fixture shop",
+      "elements": [
+        {
+          "selector": "header > a:nth-of-type(1)",
+          "html": "<a href=\"#home\">",
+          "tag": "a",
+          "role": "link",
+          "name": "Home",
+          "nameMatches": 1,
+          "testIdMatches": 0,
+          "status": "OK (name)",
+          "locator": "page.getByRole('link', { name: 'Home', exact: true })",
+          "findings": []
+        },
+        {
+          "selector": "header > a:nth-of-type(2)",
+          "html": "<a href=\"#cart\">",
+          "tag": "a",
+          "role": "link",
+          "name": "Cart",
+          "nameMatches": 1,
+          "testIdMatches": 0,
+          "status": "OK (name)",
+          "locator": "page.getByRole('link', { name: 'Cart', exact: true })",
+          "findings": []
+        },
+        {
+          "selector": "button#menu-toggle",
+          "html": "<button data-testid=\"open-menu-button\" id=\"menu-toggle\">",
+          "tag": "button",
+          "role": "button",
+          "name": "",
+          "testId": "open-menu-button",
+          "nameMatches": 0,
+          "testIdMatches": 1,
+          "status": "OK (test ID)",
+          "locator": "page.getByTestId('open-menu-button')",
+          "findings": [
+            {
+              "rule": "missing-name",
+              "message": "no accessible name (add visible text, a label or aria-label)"
+            }
+          ]
+        },
+        {
+          "selector": "input#search",
+          "html": "<input id=\"search\" type=\"text\">",
+          "tag": "input",
+          "role": "textbox",
+          "name": "Search products",
+          "nameMatches": 1,
+          "testIdMatches": 0,
+          "status": "OK (name)",
+          "locator": "page.getByRole('textbox', { name: 'Search products', exact: true })",
+          "findings": []
+        },
+        {
+          "selector": "button#favorite",
+          "html": "<button id=\"favorite\" aria-label=\"Add to favorites\">",
+          "tag": "button",
+          "role": "button",
+          "name": "Add to favorites",
+          "nameMatches": 1,
+          "testIdMatches": 0,
+          "status": "OK (name)",
+          "locator": "page.getByRole('button', { name: 'Add to favorites', exact: true })",
+          "findings": []
+        },
+        {
+          "selector": "ul#products > li:nth-of-type(1) > button",
+          "html": "<button class=\"add\">",
+          "tag": "button",
+          "role": "button",
+          "name": "Add to cart",
+          "nameMatches": 3,
+          "testIdMatches": 0,
+          "status": "OK (name)",
+          "reason": "repeated (3 on the page): unique inside its list item",
+          "locator": "page.getByRole('listitem').filter({ hasText: 'Lamp Add to cart' }).getByRole('button', { name: 'Add to cart', exact: true })",
+          "findings": []
+        },
+        {
+          "selector": "ul#products > li:nth-of-type(2) > button",
+          "html": "<button class=\"add\">",
+          "tag": "button",
+          "role": "button",
+          "name": "Add to cart",
+          "nameMatches": 3,
+          "testIdMatches": 0,
+          "status": "OK (name)",
+          "reason": "repeated (3 on the page): unique inside its list item",
+          "locator": "page.getByRole('listitem').filter({ hasText: 'Chair Add to cart' }).getByRole('button', { name: 'Add to cart', exact: true })",
+          "findings": []
+        },
+        {
+          "selector": "ul#products > li:nth-of-type(3) > button",
+          "html": "<button class=\"add\">",
+          "tag": "button",
+          "role": "button",
+          "name": "Add to cart",
+          "nameMatches": 3,
+          "testIdMatches": 0,
+          "status": "OK (name)",
+          "reason": "repeated (3 on the page): unique inside its list item",
+          "locator": "page.getByRole('listitem').filter({ hasText: 'Desk Add to cart' }).getByRole('button', { name: 'Add to cart', exact: true })",
+          "findings": []
+        },
+        {
+          "selector": "ul#cart > li:nth-of-type(1) > button",
+          "html": "<button class=\"remove\">",
+          "tag": "button",
+          "role": "button",
+          "name": "Remove",
+          "nameMatches": 2,
+          "testIdMatches": 0,
+          "status": "OK (name)",
+          "reason": "repeated (2 on the page): unique inside its list item",
+          "locator": "page.getByRole('listitem').filter({ hasText: 'Lamp in cart Remove' }).getByRole('button', { name: 'Remove', exact: true })",
+          "findings": []
+        },
+        {
+          "selector": "ul#cart > li:nth-of-type(2) > button",
+          "html": "<button class=\"remove\">",
+          "tag": "button",
+          "role": "button",
+          "name": "Remove",
+          "nameMatches": 2,
+          "testIdMatches": 0,
+          "status": "OK (name)",
+          "reason": "repeated (2 on the page): unique inside its list item",
+          "locator": "page.getByRole('listitem').filter({ hasText: 'Desk in cart Remove' }).getByRole('button', { name: 'Remove', exact: true })",
+          "findings": []
+        },
+        {
+          "selector": "input#gift",
+          "html": "<input type=\"checkbox\" id=\"gift\">",
+          "tag": "input",
+          "role": "checkbox",
+          "name": "Gift wrap",
+          "nameMatches": 1,
+          "testIdMatches": 0,
+          "status": "OK (name)",
+          "locator": "page.getByRole('checkbox', { name: 'Gift wrap', exact: true })",
+          "findings": []
+        },
+        {
+          "selector": "select#shipping",
+          "html": "<select id=\"shipping\">",
+          "tag": "select",
+          "role": "combobox",
+          "name": "Shipping",
+          "nameMatches": 1,
+          "testIdMatches": 0,
+          "status": "OK (name)",
+          "locator": "page.getByRole('combobox', { name: 'Shipping', exact: true })",
+          "findings": []
+        },
+        {
+          "selector": "button[data-testid=\"delete-selected-button\"]",
+          "html": "<button data-testid=\"delete-selected-button\">",
+          "tag": "button",
+          "role": "button",
+          "name": "Delete",
+          "testId": "delete-selected-button",
+          "nameMatches": 2,
+          "testIdMatches": 1,
+          "status": "OK (test ID)",
+          "reason": "name \"Delete\" matches 2 elements; the test ID is unique",
+          "locator": "page.getByTestId('delete-selected-button')",
+          "findings": []
+        },
+        {
+          "selector": "button[data-testid=\"delete-all-button\"]",
+          "html": "<button data-testid=\"delete-all-button\">",
+          "tag": "button",
+          "role": "button",
+          "name": "Delete",
+          "testId": "delete-all-button",
+          "nameMatches": 2,
+          "testIdMatches": 1,
+          "status": "OK (test ID)",
+          "reason": "name \"Delete\" matches 2 elements; the test ID is unique",
+          "locator": "page.getByTestId('delete-all-button')",
+          "findings": []
+        },
+        {
+          "selector": "main > button:nth-of-type(4)",
+          "html": "<button>",
+          "tag": "button",
+          "role": "button",
+          "name": "Compare",
+          "nameMatches": 2,
+          "testIdMatches": 0,
+          "status": "Needs test ID",
+          "reason": "name \"Compare\" matches 2 elements on the page",
+          "findings": []
+        },
+        {
+          "selector": "main > button:nth-of-type(5)",
+          "html": "<button>",
+          "tag": "button",
+          "role": "button",
+          "name": "Compare",
+          "nameMatches": 2,
+          "testIdMatches": 0,
+          "status": "Needs test ID",
+          "reason": "name \"Compare\" matches 2 elements on the page",
+          "findings": []
+        },
+        {
+          "selector": "tbody > tr:nth-of-type(2) > td:nth-of-type(2) > button",
+          "html": "<button class=\"open\">",
+          "tag": "button",
+          "role": "button",
+          "name": "Open",
+          "nameMatches": 2,
+          "testIdMatches": 0,
+          "status": "OK (name)",
+          "reason": "repeated (2 on the page): unique inside its row",
+          "locator": "page.getByRole('row').filter({ hasText: '1042' }).getByRole('button', { name: 'Open', exact: true })",
+          "findings": []
+        },
+        {
+          "selector": "tbody > tr:nth-of-type(3) > td:nth-of-type(2) > button",
+          "html": "<button class=\"open\">",
+          "tag": "button",
+          "role": "button",
+          "name": "Open",
+          "nameMatches": 2,
+          "testIdMatches": 0,
+          "status": "OK (name)",
+          "reason": "repeated (2 on the page): unique inside its row",
+          "locator": "page.getByRole('row').filter({ hasText: '1043' }).getByRole('button', { name: 'Open', exact: true })",
+          "findings": []
+        }
+      ],
+      "totals": {
+        "elements": 18,
+        "okId": 3,
+        "okName": 13,
+        "needsId": 2,
+        "missingName": 0,
+        "fixId": 0,
+        "review": 0,
+        "todo": 2
+      }
+    }
+  ],
+  "totals": {
+    "elements": 18,
+    "okId": 3,
+    "okName": 13,
+    "needsId": 2,
+    "missingName": 0,
+    "fixId": 0,
+    "review": 0,
+    "todo": 2
+  }
+}
