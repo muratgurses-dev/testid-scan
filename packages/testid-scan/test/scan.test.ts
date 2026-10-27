@@ -357,12 +357,16 @@ test('Markdown report and result agree', () => {
   const t = result.totals;
   assert.deepEqual([t.elements, t.okId, t.okName, t.needsId, t.missingName, t.fixId, t.todo, t.violations, t.review], [6, 1, 0, 2, 1, 1, 4, 1, 1]);
   assert.equal(t.okId + t.okName + t.reviewed + t.todo + t.review, t.elements, 'every element has exactly one status');
-  const md = renderMarkdown(result);
+  const md = renderMarkdown(result, { detailed: true });
   assert.match(md, /\| 1 \| 6 \| 1 \| 0 \| 0 \| 2 \| 1 \| 1 \| 4 \| 1 \| 1 \|/);
   assert.match(md, /\| orders \| orders\/list\/list\.component\.html \|/);
   for (const e of result.elements.filter((x) => x.status !== 'OK (test ID)' || x.violations.length)) {
     assert.ok(md.includes(`${e.file}:${e.line} |`), `report lists ${e.file}:${e.line}`);
   }
+  const summary = renderMarkdown(result);
+  assert.match(summary, /\| 1 \| 6 \| 1 \| 0 \| 0 \| 2 \| 1 \| 1 \| 4 \| 1 \| 1 \|/, 'the same totals');
+  const section = summary.slice(summary.indexOf('## orders/list/list.component.html'), summary.indexOf('## Totals'));
+  for (const e of result.elements) assert.match(section, new RegExp(`\\bL${e.line}\\b`), `report lists line ${e.line} under its file`);
 });
 
 test('command line: exit codes, JSON output, config file, usage errors', () => {

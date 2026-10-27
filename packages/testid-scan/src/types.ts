@@ -201,6 +201,8 @@ export interface ScanResult {
   /** YYYY-MM-DD */
   scannedOn: string;
   frameworks: Framework[];
+  /** Where `frameworks` came from: the framework option, the nearest package.json, or all three because no package.json names one. */
+  frameworkSource?: 'option' | 'package.json' | 'default';
   strict: boolean;
   files: FileResult[];
   elements: ElementRecord[];

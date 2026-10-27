@@ -238,7 +238,7 @@ test('reports: counts, the accessibility section, and the optional locator list'
   const t = result.totals;
   assert.deepEqual([t.okName, t.okId, t.missingName, t.review, t.todo, t.a11y], [2, 1, 0, 1, 0, 2], 'findings are not part of To do');
 
-  const md = renderMarkdown(result);
+  const md = renderMarkdown(result, { detailed: true });
   assert.match(md, /## Accessibility findings/);
   assert.match(md, /### Confirmed in the source \(2\)/);
   assert.match(md, /orders\.component\.html:2 \| button \| OK \(test ID\) \| missing-name: no accessible name/);
@@ -246,6 +246,11 @@ test('reports: counts, the accessibility section, and the optional locator list'
   assert.match(md, /### Rests on an assumption, check before acting \(1\)/);
   assert.doesNotMatch(md, /## Recommended locators/, 'the full list is opt-in');
 
+  const summary = renderMarkdown(result);
+  assert.match(summary, /- L2 `<button>` `orders-create-button`: accessibility: no accessible name/, 'a finding on an OK element is listed under it');
+  assert.match(summary, /L3 `<input>` placeholder "Search": accessibility: has a placeholder but no label/);
+  assert.match(summary, /accessibility, check this: /, 'a finding that rests on an assumption says so');
+  assert.doesNotMatch(summary, /## Recommended locators/, 'the full list is opt-in');
   const full = renderMarkdown(result, { locators: true });
   assert.match(full, /## Recommended locators/);
   assert.match(full, /orders\.component\.html:1 \| page-candidate \| `page\.getByRole\('button', \{ name: 'Save', exact: true \}\)`/);

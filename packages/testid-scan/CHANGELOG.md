@@ -3,16 +3,23 @@
 Versions before 1.0 were prototypes and were not published to npm. The JSON keeps `schemaVersion: 1`: fields are only
 ever added. CLI options are unchanged.
 
-## Unreleased
+## 1.1.0 — 2026-10-27
 
-### Fixed
-- **The Markdown report showed a repeated element's locator under Manual review without its note.** For a button in an
-  `*ngFor` row with no record key, `page.getByRole('button', { name: 'Open', exact: true })` read as if it were unique,
-  while on its own it matches every row (a strict-mode error in Playwright). The line now carries the locator note
-  ("repeated: on its own this matches every record"), as the `--locators` section and the JSON already did. JSON and
-  statuses are unchanged. Regression test in `test/output.test.ts`.
+The Markdown report has a new default layout; `--detailed` keeps the 1.0 layout. Statuses, counts, fingerprints, the
+terminal output, `--format quiet`, baselines and the JSON (apart from the new `frameworkSource` field) are unchanged.
 
 ### Changed
+- **The Markdown report is grouped by file, with what to do about each item.** It starts with one line of counts,
+  then one section per file that needs work: To do (with the fix, e.g. "give each one its own test ID", and the
+  suggested test ID), To review in the browser (with the locator, its note and the fingerprint), Marked reviewed,
+  and OK (the elements that are fine, which the 1.0 report only counted). Accessibility findings are shown next to
+  their element, and not repeated when they say the same as the status. Items that say the same thing are joined
+  (`L11, L12`). The element is shown with its own tag (`<div>` "Select", not button "Select"), and a field without
+  a label with its placeholder. Tags and placeholders such as `data-<entity>-id` are code, so a Markdown viewer
+  does not drop them as markup. Empty sections are left out; files with nothing to do share one line; the totals,
+  the explanations of the statuses and how to use a fingerprint come last.
+- The report says where the framework list came from: `Angular (from package.json)`, `(set by the framework
+  option)`, or that no package.json names one, so all three were tried. The JSON gains `frameworkSource`.
 - **A repeated element that cannot be scoped now says where its record key goes.** The reason "give the record a
   stable key" gets an example in the framework's own syntax, on the element that starts the loop:
   `(e.g. [attr.data-<entity>-id]="o.id" on the <tr> at line 5)`, `data-<entity>-id={item.id}` in React,
@@ -21,6 +28,16 @@ ever added. CLI options are unchanged.
   `<ng-template>` or `<template>` gets no example, since an attribute there does not reach the DOM. The hint is not
   part of the fingerprint, so reviewed markers stay valid and moving code does not invalidate them. Statuses and
   locators are unchanged. The JSON schema is unchanged. Tests in `test/locators.test.ts`.
+
+### Added
+- `--detailed` (`renderMarkdown(result, { detailed: true })`): the 1.0 layout.
+
+### Fixed
+- **The 1.0 report (now `--detailed`) showed a repeated element's locator under Manual review without its note.** For a button in an
+  `*ngFor` row with no record key, `page.getByRole('button', { name: 'Open', exact: true })` read as if it were unique,
+  while on its own it matches every row (a strict-mode error in Playwright). The line now carries the locator note
+  ("repeated: on its own this matches every record"), as the `--locators` section and the JSON already did. JSON and
+  statuses are unchanged. Regression test in `test/output.test.ts`.
 
 ## 1.0.1 — 2026-10-21
 
