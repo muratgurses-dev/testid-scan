@@ -37,8 +37,12 @@ function textOf(ctx: ScanContext, d: Dialect, raw: string): Text {
   // 1. take interpolations out first, so a '<' or '>' inside them cannot confuse tag removal
   let s = raw.replace(/\{\{([\s\S]*?)\}\}/g, (_m, expr: string) => { exprs.push(expr); return `\u0001${exprs.length - 1}\u0001`; });
   // 2. drop what assistive technology does not read: icon ligatures and aria-hidden subtrees
+  const icons: string[] = [];
   for (const tag of new Set(ctx.cfg.iconTags.flatMap((t) => [t, d.tagKey(t)]))) {
-    s = s.replace(new RegExp(`<${escapeRegExp(tag)}\\b(?![^>]*aria-hidden\\s*=\\s*["']false["'])[^>]*>[\\s\\S]*?</${escapeRegExp(tag)}\\s*>`, 'gi'), ' ');
+    s = s.replace(new RegExp(`<(${escapeRegExp(tag)})\\b(?![^>]*aria-hidden\\s*=\\s*["']false["'])[^>]*>([\\s\\S]*?)</${escapeRegExp(tag)}\\s*>`, 'gi'), (_m, written: string, inner: string) => {
+      icons.push(iconDescription(written, inner.replace(/<[^>]*>/g, ' ')));
+      return ' ';
+    });
   }
   s = s.replace(/<([a-zA-Z][\w-]*)\b[^>]*\baria-hidden\s*=\s*["']true["'][^>]*>[\s\S]*?<\/\1\s*>/gi, ' ');
   s = s.replace(/<([a-zA-Z][\w-]*)\b[^>]*\shidden(?=[\s>/])[^>]*>[\s\S]*?<\/\1\s*>/gi, ' '); // <span hidden>
@@ -69,7 +73,14 @@ function textOf(ctx: ScanContext, d: Dialect, raw: string): Text {
   });
   if (d.controlFlowBlocks) s = s.replace(/@(if|else|for|switch|case|default|empty)\b[^{]*\{|\}/g, ' ');
   result.text = s.replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ').trim();
+  if (icons.length) result.icons = icons;
   return result;
+}
+
+/** `<mat-icon> "close"`: the icon tag and its ligature, when it has one written as plain text. */
+export function iconDescription(tag: string, inner: string): string {
+  const text = inner.replace(/\s+/g, ' ').trim();
+  return /^[\w -]+$/.test(text) ? `<${tag}> "${text}"` : `<${tag}>`;
 }
 
 /**
@@ -174,5 +185,13 @@ export function resolveName(ctx: ScanContext, d: Dialect, tpl: Template, index: 
     fromTitle: Boolean(chosen?.title),
     keys: chosen?.keys ?? [],
     missingKeys: chosen?.missingKeys ?? [],
+    ...iconsOf(chosen, candidates),
   };
+}
+
+/** The icons that stood in for a name, when no name was found. */
+export function iconsOf(chosen: Text | undefined, candidates: Text[]): { icons?: string[] } {
+  if (chosen) return {};
+  const icons = [...new Set(candidates.flatMap((c) => c.icons ?? []))];
+  return icons.length ? { icons } : {};
 }

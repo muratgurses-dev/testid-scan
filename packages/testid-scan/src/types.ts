@@ -44,6 +44,8 @@ export interface NameResult {
   missingKeys: string[];
   /** Extra explanation for the report, e.g. an assumption the adapter made. */
   hint?: string;
+  /** No name was found, and the content holds only icons, which assistive technology does not read: `<mat-icon> "close"`. */
+  icons?: string[];
 }
 
 export const NO_NAME: NameResult = { label: '', kind: 'none', fromTitle: false, keys: [], missingKeys: [] };

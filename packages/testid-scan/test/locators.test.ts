@@ -309,3 +309,44 @@ test('record key hint: following it scopes the element; adding it does not chang
   assert.equal(before?.fingerprint, moved?.fingerprint);
   assert.equal(before?.fingerprint, '079cb9c2', 'same fingerprint as testid-scan 1.0.1 gave for this element');
 });
+
+// ---------- an element whose content is only an icon: say why it has no name ----------
+
+const reasonOf = (rows: ElementRecord[]) => rows.map((r) => `${r.status}: ${r.reason ?? ''}`);
+
+test('icon-only content: the reason says the icon is not read and suggests an aria-label from its name', () => {
+  assert.deepEqual(reasonOf(scanTemplate([
+    '<button (click)="close()"><mat-icon>close</mat-icon></button>',
+    '<a href="/cart"><mat-icon>shopping_cart</mat-icon></a>',
+    '<button><svg viewBox="0 0 1 1"></svg></button>',
+  ].join('\n'))), [
+    'Missing name: no accessible name: <mat-icon> "close" is an icon, which assistive technology does not read; add aria-label="Close"',
+    'Missing name: no accessible name: <mat-icon> "shopping_cart" is an icon, which assistive technology does not read; add aria-label="Shopping cart"',
+    'Missing name: no accessible name: <svg> is an icon, which assistive technology does not read; add an aria-label that says what it does',
+  ]);
+  assert.match(reasonOf(scanVue('<template><button @click="x"><v-icon>mdi-account-plus</v-icon></button></template>'))[0], /<v-icon> "mdi-account-plus" is an icon, .*; add aria-label="Account plus"$/, 'an icon font prefix is not part of the label');
+  assert.deepEqual(reasonOf(scanJsx('export const A = () => <><button><AddIcon /></button><button><ShoppingCartOutlinedIcon /></button></>;')).map((r) => r.replace(/^.*; /, '')), [
+    'add aria-label="Add"', 'add aria-label="Shopping cart"',
+  ], 'a React icon component is named after what it shows');
+});
+
+test('icon-only content: the status, the finding and its certainty stay as they were', () => {
+  const [icon] = scanTemplate('<button><mat-icon>close</mat-icon></button>');
+  assert.equal(icon.status, 'Missing name');
+  assert.deepEqual(icon.accessibilityFindings.map((f) => [f.rule, f.certainty]), [['missing-name', 'confirmed']]);
+  assert.deepEqual(reasonOf(scanTemplate('<button><mat-icon>add</mat-icon> Add</button>\n<button><mat-icon aria-hidden="false">menu</mat-icon></button>\n<button></button>')), [
+    'OK (name): ', 'OK (name): ', 'Missing name: no accessible name (add visible text, a label or aria-label)',
+  ], 'text next to the icon, a visible icon and an empty button are not icon-only');
+  // a component the scanner cannot see into keeps its assumption, and no icon is named
+  const [unknown] = scanJsx('export const A = () => <button><FaTrash /></button>;');
+  assert.match(unknown.reason ?? '', /<FaTrash \/> assumed to render no text/);
+  assert.equal(unknown.accessibilityFindings[0].certainty, 'needs-review');
+});
+
+test('icon-only content: the report shows the icon as code', () => {
+  const root = mkdtempSync(join(tmpdir(), 'testid-icon-'));
+  mkdirSync(join(root, 'a'));
+  writeFileSync(join(root, 'a', 'a.component.html'), '<button (click)="close()"><mat-icon>close</mat-icon></button>\n');
+  const md = renderMarkdown(scan(root, { framework: 'angular' }));
+  assert.ok(md.includes('- L1 `<button>`: no accessible name: `<mat-icon>` "close" is an icon, which assistive technology does not read; add aria-label="Close"'));
+});
