@@ -43,6 +43,14 @@ const TASKS: Array<{ status: ElementRecord['status']; title: string }> = [
   { status: 'Missing name', title: 'Add an accessible name' },
   { status: 'Fix test ID', title: 'Fix the test ID' },
 ];
+/**
+ * The locator note under Manual review. Without it a repeated element's locator reads as if it were unique, while on
+ * its own it matches every record. "Review required" is dropped: the section already says so.
+ */
+const reviewNote = (e: ElementRecord) => {
+  const note = (e.locatorNote ?? '').split('; ').filter((part) => part && part !== 'review required: see the reason').join('; ');
+  return note ? ` | ${note}` : '';
+};
 const isTodo = (e: ElementRecord) => TASKS.some((t) => t.status === e.status);
 const signed = (n: number) => (n > 0 ? `+${n}` : String(n));
 /** "1 file", "2 files". */
@@ -147,7 +155,7 @@ export function renderMarkdown(result: ScanResult, options: ReportOptions = {}):
   lines.push('', '## Manual review (check in the browser)', '');
   const review = elements.filter((e) => e.status === 'Manual review');
   if (!review.length) lines.push('- None');
-  for (const e of review) lines.push(`- ${e.file}:${e.line} | ${e.kind} | ${e.testId ?? shownName(e)} | ${e.reason} | fingerprint ${e.fingerprint}${e.recommendedLocator ? ` | ${code(e.recommendedLocator)}` : ''}`);
+  for (const e of review) lines.push(`- ${e.file}:${e.line} | ${e.kind} | ${e.testId ?? shownName(e)} | ${e.reason} | fingerprint ${e.fingerprint}${e.recommendedLocator ? ` | ${code(e.recommendedLocator)}${reviewNote(e)}` : ''}`);
 
   lines.push('', '## Acknowledged by a reviewed marker', '');
   const acknowledged = elements.filter((e) => e.status === 'OK (reviewed)');
