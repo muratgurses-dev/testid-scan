@@ -3,7 +3,8 @@
 // for the reason it was written for. The generated steps are also type-checked with strict TypeScript.
 //
 // Needs Node 20 or later (playwright-bdd 9) and Chromium for the Playwright version below:
-//   PW_VERSION=1.56.0 npm run e2e      (E2E_INSTALL_BROWSER=1 also installs that Chromium, as CI does)
+//   PW_VERSION=1.56.0 npm run e2e      (E2E_INSTALL_BROWSER=1 also installs that Chromium, as CI does;
+//                                       E2E_CHROMIUM=<path> runs an installed Chromium instead)
 import { spawn, execFileSync } from 'node:child_process';
 import { cpSync, mkdirSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
@@ -35,7 +36,8 @@ const { server, base } = await serve(fixtures);
 writeFileSync(join(dir, 'playwright.config.ts'), `import { defineConfig } from '@playwright/test';
 import { defineBddConfig } from 'playwright-bdd';
 const testDir = defineBddConfig({ features: 'features/*.feature', steps: 'steps/*.ts' });
-export default defineConfig({ testDir, timeout: 15000, expect: { timeout: 3000 }, use: { baseURL: ${JSON.stringify(base)} }, reporter: 'list' });
+export default defineConfig({ testDir, timeout: 15000, expect: { timeout: 3000 }, reporter: 'list',
+  use: { baseURL: ${JSON.stringify(base)}${process.env.E2E_CHROMIUM ? `, launchOptions: { executablePath: ${JSON.stringify(process.env.E2E_CHROMIUM)} }` : ''} } });
 `);
 
 /** Runs one feature file; asynchronous, so the server in this process can answer the browser. */
@@ -44,11 +46,12 @@ function runFeature(file) {
   mkdirSync(join(dir, 'features'));
   cpSync(join(fixtures, file), join(dir, 'features', file));
   return new Promise((resolve) => {
-    const child = spawn(`${npx} bddgen && ${npx} playwright test`, { cwd: dir, shell: true });
+    const child = spawn(`${npx} bddgen && ${npx} playwright test`, { cwd: dir, shell: true, env: { ...process.env, FORCE_COLOR: '0' } });
     let out = '';
     child.stdout.on('data', (d) => { out += d; });
     child.stderr.on('data', (d) => { out += d; });
-    child.on('close', (status) => resolve({ status, out }));
+    // some Playwright versions color their errors even when told not to: compare plain text
+    child.on('close', (status) => resolve({ status, out: out.replace(/\x1b\[[0-9;]*m/g, '') }));
   });
 }
 
@@ -66,6 +69,8 @@ if (!/toBeVisible\(\) failed/.test(bad.out)) failures.push('the removed item did
 server.close();
 if (failures.length) {
   console.error(`\ne2e FAILED\n${failures.join('\n\n')}`);
+  // in GitHub Actions, also as annotations, which can be read without the log
+  if (process.env.GITHUB_ACTIONS) for (const f of failures) console.log(`::error title=testid-scan-bdd e2e::${f.split('\n')[0].replace(/%/g, '%25')}`);
   process.exit(1);
 }
 console.log('e2e ok: the generated steps pass shop.feature in Chromium, and fail where they must');
