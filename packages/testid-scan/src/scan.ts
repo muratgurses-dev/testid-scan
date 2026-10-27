@@ -16,14 +16,14 @@ import type { ElementRecord, FileResult, Framework, ScanResult } from './types.t
 function classifyUnits(units: Unit[], cfg: Config): ElementRecord[][] {
   if (cfg.followComponents) applyComponentUsage(units);
   const shared = cfg.followComponents ? namesSharedOnPage(units) : undefined;
-  return units.map((unit) => classify(unit.candidates, unit.file, cfg, shared));
+  return units.map((unit) => classify(unit.candidates, unit.file, cfg, shared, unit.framework));
 }
 
 /** Scan one Angular template string. Handy for editor plugins and unit tests. */
 export function scanTemplate(source: string, options: Partial<Config> = {}, file = 'template.html'): ElementRecord[] {
   const cfg = mergeConfig(defaultConfig, options);
   if (cfg.placeholderAsLabel === 'auto') cfg.placeholderAsLabel = 'never';
-  return classify(angularCandidates(source, createContext(cfg)), file, cfg);
+  return classify(angularCandidates(source, createContext(cfg)), file, cfg, undefined, 'angular');
 }
 
 /** Scan the JSX in one React source string. The file name decides between TSX and JSX syntax. */
@@ -37,7 +37,7 @@ export function scanVue(source: string, options: Partial<Config> = {}, file = 'C
   const cfg = mergeConfig(defaultConfig, options);
   const template = vueTemplate(source);
   if ('skipped' in template) return [];
-  return classify(vueCandidates(template.source, createContext(cfg), template.lineOffset), file, cfg);
+  return classify(vueCandidates(template.source, createContext(cfg), template.lineOffset), file, cfg, undefined, 'vue');
 }
 
 /** Dependencies of each package.json at or above `root`, nearest first. */
@@ -63,8 +63,8 @@ export function angularMaterialMajor(root: string): number | undefined {
   return undefined;
 }
 
-/** Frameworks named in the nearest package.json at or above `root`; all of them when it does not say. */
-export function detectFrameworks(root: string): Framework[] {
+/** Frameworks named in the nearest package.json at or above `root` that names any; undefined when none does. */
+function frameworksInPackageJson(root: string): Framework[] | undefined {
   for (const deps of packageDependencies(root)) {
     const found: Framework[] = [];
     if ('@angular/core' in deps) found.push('angular');
@@ -72,7 +72,12 @@ export function detectFrameworks(root: string): Framework[] {
     if (['vue', 'nuxt'].some((name) => name in deps)) found.push('vue');
     if (found.length) return found;
   }
-  return ['angular', 'react', 'vue'];
+  return undefined;
+}
+
+/** Frameworks named in the nearest package.json at or above `root`; all of them when it does not say. */
+export function detectFrameworks(root: string): Framework[] {
+  return frameworksInPackageJson(root) ?? ['angular', 'react', 'vue'];
 }
 
 /** Group = the folder path between the scan root and the component's own folder (at most three levels). */
@@ -96,7 +101,9 @@ export function scan(folder: string, options: Partial<Config> = {}): ScanResult 
   // before version 15 every <mat-chip> is a selectable option; later only <mat-chip-option> is
   if (legacyMaterial && !Object.hasOwn(cfg.elements, 'mat-chip')) cfg.elements = { ...cfg.elements, 'mat-chip': 'option' };
   const ctx = createContext(cfg);
-  const frameworks = cfg.framework === 'auto' ? detectFrameworks(root) : [cfg.framework];
+  const fromPackage = cfg.framework === 'auto' ? frameworksInPackageJson(root) : undefined;
+  const frameworks = cfg.framework !== 'auto' ? [cfg.framework] : fromPackage ?? detectFrameworks(root);
+  const frameworkSource: ScanResult['frameworkSource'] = cfg.framework !== 'auto' ? 'option' : fromPackage ? 'package.json' : 'default';
   const angular = frameworks.includes('angular');
   const react = frameworks.includes('react');
   const vue = frameworks.includes('vue');
@@ -179,7 +186,7 @@ export function scan(folder: string, options: Partial<Config> = {}): ScanResult 
 
   return {
     schemaVersion: 1,
-    source: folder, scannedOn: new Date().toISOString().slice(0, 10), frameworks, strict: cfg.strict,
+    source: folder, scannedOn: new Date().toISOString().slice(0, 10), frameworks, frameworkSource, strict: cfg.strict,
     files, elements, totals: countElements(elements), sharedTestIds, notScanned,
   };
 }

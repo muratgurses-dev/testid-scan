@@ -22,7 +22,8 @@ function loopOf(attrs: Attrs): Loop | undefined {
   if (value === undefined) return undefined;
   const m = /^\s*(?:\(([^)]*)\)|(\{[^}]*\}|\[[^\]]*\]|[\w$]+))\s+(?:in|of)\s/.exec(value);
   if (!m) return { itemVars: [], indexVars: [] };
-  if (m[2]) return { itemVars: identifiers(m[2]), indexVars: [] };
+  const plain = (s: string) => (/^\s*[A-Za-z_$][\w$]*\s*$/.test(s) ? s.trim() : undefined);
+  if (m[2]) return { itemVars: identifiers(m[2]), indexVars: [], record: plain(m[2]) };
   // split "(item, index)" on commas that are not inside a destructuring pattern
   const parts: string[] = [];
   let depth = 0; let current = '';
@@ -32,7 +33,7 @@ function loopOf(attrs: Attrs): Loop | undefined {
     if (ch === ',' && depth === 0) { parts.push(current); current = ''; } else current += ch;
   }
   parts.push(current);
-  return { itemVars: identifiers(parts[0] ?? ''), indexVars: parts.slice(1).flatMap(identifiers) };
+  return { itemVars: identifiers(parts[0] ?? ''), indexVars: parts.slice(1).flatMap(identifiers), record: plain(parts[0] ?? '') };
 }
 
 /** 'Save', $t('KEY'), t("KEY"): fixed text. Anything else (a variable, a call with parameters) is undefined. */

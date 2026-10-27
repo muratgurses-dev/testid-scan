@@ -90,7 +90,7 @@ function forBlocks(src: string): ForBlock[] {
     while (j < src.length && depth > 0) { if (src[j] === '{') depth += 1; else if (src[j] === '}') depth -= 1; j += 1; }
     const loop: Loop = { itemVars: [], indexVars: ['$index'] };
     const item = new RegExp(`^\\s*(${IDENT})\\s+of\\b`).exec(header);
-    if (item) loop.itemVars.push(item[1]);
+    if (item) { loop.itemVars.push(item[1]); loop.record = item[1]; }
     for (const alias of header.matchAll(new RegExp(`(${IDENT})\\s*=\\s*\\$index\\b`, 'g'))) loop.indexVars.push(alias[1]);
     blocks.push({ open, end: j, loop });
   }

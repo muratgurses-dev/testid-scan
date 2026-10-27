@@ -238,7 +238,7 @@ test('reports: counts, the accessibility section, and the optional locator list'
   const t = result.totals;
   assert.deepEqual([t.okName, t.okId, t.missingName, t.review, t.todo, t.a11y], [2, 1, 0, 1, 0, 2], 'findings are not part of To do');
 
-  const md = renderMarkdown(result);
+  const md = renderMarkdown(result, { detailed: true });
   assert.match(md, /## Accessibility findings/);
   assert.match(md, /### Confirmed in the source \(2\)/);
   assert.match(md, /orders\.component\.html:2 \| button \| OK \(test ID\) \| missing-name: no accessible name/);
@@ -246,6 +246,11 @@ test('reports: counts, the accessibility section, and the optional locator list'
   assert.match(md, /### Rests on an assumption, check before acting \(1\)/);
   assert.doesNotMatch(md, /## Recommended locators/, 'the full list is opt-in');
 
+  const summary = renderMarkdown(result);
+  assert.match(summary, /- L2 `<button>` `orders-create-button`: accessibility: no accessible name/, 'a finding on an OK element is listed under it');
+  assert.match(summary, /L3 `<input>` placeholder "Search": accessibility: has a placeholder but no label/);
+  assert.match(summary, /accessibility, check this: /, 'a finding that rests on an assumption says so');
+  assert.doesNotMatch(summary, /## Recommended locators/, 'the full list is opt-in');
   const full = renderMarkdown(result, { locators: true });
   assert.match(full, /## Recommended locators/);
   assert.match(full, /orders\.component\.html:1 \| page-candidate \| `page\.getByRole\('button', \{ name: 'Save', exact: true \}\)`/);
@@ -264,4 +269,43 @@ test('reports: counts, the accessibility section, and the optional locator list'
   assert.deepEqual(parsed.elements.map((e) => e.locatorScope), ['page-candidate', 'page-candidate', 'page-candidate', 'unknown']);
   assert.equal(parsed.elements[1].accessibilityFindings[0].rule, 'missing-name');
   assert.equal(parsed.elements[0].recommendedLocator, 'page.getByRole(\'button\', { name: \'Save\', exact: true })');
+});
+
+// ---------- where to put the record key of a repeated element that cannot be scoped ----------
+
+const unscoped = (rows: ElementRecord[]) => rows.filter((r) => r.status === 'Manual review').map((r) => r.reason ?? '');
+const ORDERS = '<table>\n  <tr *ngFor="let o of orders">\n    <td><button (click)="open(o)">Open</button></td>\n  </tr>\n</table>';
+
+test('record key hint: names the element, the line and the loop variable, in each framework\'s syntax', () => {
+  assert.deepEqual(unscoped(scanTemplate(ORDERS)), [
+    'repeated element: scope the locator to a unique parent, or give the record a stable key (e.g. [attr.data-<entity>-id]="o.id" on the <tr> at line 2)',
+  ]);
+  assert.match(unscoped(scanTemplate('@for (o of orders; track o.id) {\n  <div>\n    <button (click)="x()">Edit</button>\n  </div>\n}'))[0], /\[attr\.data-<entity>-id\]="o\.id" on the <div> at line 2\)$/);
+  assert.match(unscoped(scanJsx('export function L({ items }) {\n  return <ul>{items.map((item) => (\n    <li key={item.id}><button onClick={() => 1}>Edit</button></li>\n  ))}</ul>;\n}'))[0], /data-<entity>-id=\{item\.id\} on the <li> at line 3\)$/);
+  assert.match(unscoped(scanVue('<template>\n  <ul>\n    <li v-for="item in items" :key="item.id">\n      <button @click="x">Edit</button>\n    </li>\n  </ul>\n</template>'))[0], /:data-<entity>-id="item\.id" on the <li> at line 3\)$/);
+});
+
+test('record key hint: in a Material table the key goes on the row, not on the cell that starts the loop', () => {
+  const src = '<table mat-table [dataSource]="d">\n <ng-container matColumnDef="a">\n  <td mat-cell *matCellDef="let row"><button (click)="x(row)">Edit</button></td>\n </ng-container>\n <tr mat-row *matRowDef="let row; columns: cols"></tr>\n</table>';
+  assert.match(unscoped(scanTemplate(src))[0], /"row\.id" on the <tr> at line 5\)$/);
+});
+
+test('record key hint: no variable name is made up for a destructured record, no element for a loop outside the DOM', () => {
+  assert.match(unscoped(scanJsx('export function L({ items }) {\n  return <ul>{items.map(({ id }) => (\n    <li key={id}><button onClick={() => 1}>Edit</button></li>\n  ))}</ul>;\n}'))[0], /\{<record>\.id\}/);
+  assert.match(unscoped(scanVue('<template>\n  <ul>\n    <li v-for="{ id } in items" :key="id">\n      <button @click="x">Edit</button>\n    </li>\n  </ul>\n</template>'))[0], /"<record>\.id"/);
+  assert.deepEqual(unscoped(scanTemplate('<ng-container *ngFor="let o of orders">\n  <button (click)="x()">Edit</button>\n</ng-container>')), [
+    'repeated element: scope the locator to a unique parent, or give the record a stable key',
+  ]);
+});
+
+test('record key hint: following it scopes the element; adding it does not change the fingerprint', () => {
+  const keyed = scanTemplate(ORDERS.replace('let o of orders"', 'let o of orders" [attr.data-order-id]="o.id"')).find((r) => r.tag === 'button');
+  assert.equal(keyed?.status, 'OK (name)');
+  assert.equal(keyed?.locatorScope, 'record-scoped');
+  // the hint carries a line number: moving the code must not make a reviewed marker out of date
+  const before = scanTemplate(ORDERS).find((r) => r.tag === 'button');
+  const moved = scanTemplate(`<h2>Orders</h2>\n\n${ORDERS}`).find((r) => r.tag === 'button');
+  assert.notEqual(before?.reason, moved?.reason);
+  assert.equal(before?.fingerprint, moved?.fingerprint);
+  assert.equal(before?.fingerprint, '079cb9c2', 'same fingerprint as testid-scan 1.0.1 gave for this element');
 });
