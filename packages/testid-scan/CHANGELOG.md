@@ -3,6 +3,27 @@
 Versions before 1.0 were prototypes and were not published to npm. The JSON keeps `schemaVersion: 1`: fields are only
 ever added. CLI options are unchanged.
 
+## Unreleased
+
+### Changed
+- **The Markdown report is grouped by file, with what to do about each item.** It starts with one line of counts,
+  then one section per file that needs work: To do (with the fix, e.g. "give each one its own test ID", and the
+  suggested test ID), To review in the browser (with the locator, its note and the fingerprint), Marked reviewed,
+  and OK (the elements that are fine, which the 1.0 report only counted). Accessibility findings are shown next to
+  their element, and not repeated when they say the same as the status. Items that say the same thing are joined
+  (`L11, L12`). The element is shown with its own tag (`<div>` "Select", not button "Select"), and a field without
+  a label with its placeholder. Tags and placeholders such as `data-<entity>-id` are code, so a Markdown viewer
+  does not drop them as markup. Empty sections are left out; files with nothing to do share one line; the totals,
+  the explanations of the statuses and how to use a fingerprint come last.
+- The report says where the framework list came from: `Angular (from package.json)`, `(set by the framework
+  option)`, or that no package.json names one, so all three were tried. The JSON gains `frameworkSource`.
+
+### Added
+- `--detailed` (`renderMarkdown(result, { detailed: true })`): the 1.0 layout, unchanged.
+
+Statuses, counts, the terminal output, `--format quiet`, baselines and the JSON (apart from the new field) are
+unchanged.
+
 ## 1.0.1 — 2026-10-21
 
 - Package links (repository, homepage, issues) now point to github.com/muratgurses-dev/testid-scan. No change in behaviour.

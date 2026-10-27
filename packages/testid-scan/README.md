@@ -26,7 +26,7 @@ project start from a baseline, so CI fails only on new findings.
 npx testid-scan src
 ```
 
-You get a list of what to fix, by file and line, and a full report in `testid-status.md`:
+You get a list of what to fix, by file and line, and a report in `testid-status.md`:
 
 ```
 src/app/orders/order-list.component.html
@@ -73,9 +73,32 @@ src/orders/order-list.component.html
 Report: /work/app/testid-status.md
 ```
 
-Elements that are fine are counted, not listed. The report has the same to-dos grouped by the work they
-need (add a test ID, add a name, fix a test ID), then the items to check in the browser, the accessibility
-findings, and the counts per folder and file.
+Elements that are fine are counted, not listed. The report in `testid-status.md` goes file by file: what to do
+(with the fix, and a suggested test ID where one fits), what to check in the browser, and which elements are OK,
+with accessibility notes next to the element they belong to. Files with nothing to do share one line; the totals
+and a short guide to the statuses come last:
+
+```markdown
+## app/orders/order-list.component.html (4 to do, 1 to review)
+
+**To do (4)**
+
+- L10 `<div>` "Select": clickable `<div>` has no role: use `<button>` / `<a href>`, or add role + tabindex, or add a test ID · suggested test ID: `select-button`
+- L11, L12 `<button>` "Delete": name "Delete" appears more than once · give each one its own test ID
+- L13 `<button>`: no accessible name (add visible text, a label or aria-label)
+
+**To review in the browser (1)**
+
+- L7 `<button>` "Open": repeated element: scope the locator to a unique parent, or give the record a stable key · locator: `page.getByRole('button', { name: 'Open', exact: true })` (repeated: on its own this matches every record) · fingerprint `079cb9c2`
+
+**OK (4):** L2 `<input>` placeholder "Search orders", L3 `<button>` "Refresh", L4 `<table>`, L14 `<button>` "Export"
+
+- L2 `<input>` placeholder "Search orders": accessibility: has a placeholder but no label: the placeholder disappears on input and is not a substitute for a label
+```
+
+`--detailed` gives the layout of 1.0 instead: one section per status for the whole scan (to-dos grouped by the
+work they need, violations, manual review, accessibility findings), every section shown even when empty, and the
+counts per folder and file.
 
 The framework is taken from the nearest `package.json` (`@angular/core`, `react` or `vue`). If it names
 none of them, all kinds of files are scanned.
@@ -85,6 +108,7 @@ none of them, all kinds of files are scanned.
 | `--out <file>` | Markdown report (default `testid-status.md`) |
 | `--json <file>` | also write the full result as JSON |
 | `--locators` | list the recommended locator of every element in the report |
+| `--detailed` | Markdown report in the full layout: one section per status for the whole scan |
 | `--config <file>` | config file (default: `testid-scan.config.json` in the current folder, if present) |
 | `--framework <name>` | `angular`, `react`, `vue` or `auto` (default) |
 | `--prefixes <a,b>` | allowed first word(s) of a test ID |
@@ -511,7 +535,7 @@ import { scan, scanTemplate, scanJsx, scanVue, renderMarkdown, renderText, creat
 
 const result = scan('src', { prefixes: ['orders'] });
 console.log(result.totals.todo);
-writeFileSync('report.md', renderMarkdown(result, { locators: true }));
+writeFileSync('report.md', renderMarkdown(result, { locators: true }));   // { detailed: true } for the 1.0 layout
 
 for (const e of result.elements) {
   e.recommendedLocator;      // "page.getByRole('button', { name: 'Save', exact: true })"

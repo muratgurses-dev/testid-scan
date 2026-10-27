@@ -17,6 +17,7 @@ Options
   --out <file>        Markdown report (default: testid-status.md)
   --json <file>       also write the full result as JSON
   --locators          list the recommended locator of every element in the report
+  --detailed          Markdown report in the full layout: one section per status for the whole scan
   --config <file>     config file (default: testid-scan.config.json in the current folder, if present)
   --framework <name>  angular, react, vue or auto (default: auto, from the nearest package.json)
   --prefixes <a,b>    allowed first word(s) of a test ID
@@ -36,7 +37,7 @@ Options
 Exit codes: 0 ok, 1 a --fail-on-* gate failed, 2 wrong usage or unreadable input.`;
 
 const VALUE_FLAGS = new Set(['--out', '--json', '--config', '--framework', '--prefixes', '--attr', '--i18n', '--baseline', '--format']);
-const BOOLEAN_FLAGS = new Set(['--strict', '--require-suffix', '--update-baseline', '--all-html', '--no-inline', '--fail-on-todo', '--fail-on-review', '--locators', '--help', '--version']);
+const BOOLEAN_FLAGS = new Set(['--strict', '--require-suffix', '--update-baseline', '--all-html', '--no-inline', '--fail-on-todo', '--fail-on-review', '--locators', '--detailed', '--help', '--version']);
 
 function fail(message: string): never {
   console.error(message);
@@ -94,7 +95,7 @@ try {
   }
 
   const reportPath = resolve(values.get('--out') ?? 'testid-status.md');
-  writeFileSync(reportPath, renderMarkdown(result, { locators: flags.has('--locators'), baseline }));
+  writeFileSync(reportPath, renderMarkdown(result, { locators: flags.has('--locators'), detailed: flags.has('--detailed'), baseline }));
   if (values.has('--json')) writeFileSync(resolve(values.get('--json')!), `${JSON.stringify(result, null, 2)}\n`);
 
   // paths as seen from where the command runs, so an editor or GitHub can open them
